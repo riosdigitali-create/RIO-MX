@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GreeNova SC — Desechables Biodegradables y Compostables de Lujo</title>
+<meta name="description" content="GreeNova SC — Venta y comercialización de desechables biodegradables y compostables grado alimenticio. Vasos de papel, fajillas, tapas PP y PLA, almejas de bagazo de caña y paja de trigo, papel encerado, vasos y tapas PET." />
+<link rel="icon" type="image/png" href="logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#0c1812;
+  --emerald-d:#1d4234;
+  --emerald:#326252;
+  --sage:#6c9982;
+  --lime:#9bce89;
+  --lime-bright:#b6e29f;
+  --cream:#f4f8ef;
+  --cream-2:#eaf3e2;
+  --paper:#fbfdf8;
+  --champagne:#d8c39a;
+  --glass:rgba(255,255,255,.08);
+  --shadow-soft:0 30px 70px -30px rgba(12,24,18,.45);
+  --shadow-card:0 24px 60px -28px rgba(29,66,52,.55);
+  --maxw:1240px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  font-feature-settings:"liga" 1,"kern" 1;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  overflow-x:hidden;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.05;letter-spacing:.005em}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{width:90%;max-width:var(--maxw);margin:0 auto}
+.eyebrow{
+  font-size:.72rem;letter-spacing:.42em;text-transform:uppercase;font-weight:700;
+  color:var(--sage);display:inline-flex;align-items:center;gap:.7em;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--sage))}
+.btn{
+  --bg:var(--emerald);
+  position:relative;display:inline-flex;align-items:center;gap:.6em;
+  padding:1.05em 2.1em;border-radius:100px;font-weight:600;font-size:.95rem;
+  letter-spacing:.02em;color:#fff;background:var(--bg);cursor:pointer;border:none;
+  overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  box-shadow:0 18px 40px -18px rgba(29,66,52,.8);will-change:transform;
+}
+.btn span{position:relative;z-index:2}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,var(--lime),var(--sage));opacity:0;transition:opacity .5s var(--ease);z-index:1}
+.btn:hover{transform:translateY(-4px) scale(1.015)}
+.btn:hover::after{opacity:1}
+.btn.ghost{background:transparent;color:var(--emerald-d);box-shadow:inset 0 0 0 1.5px rgba(50,98,82,.35)}
+.btn.ghost::after{background:var(--emerald)}
+.btn.ghost:hover{color:#fff}
+.btn.lg{padding:1.25em 2.6em;font-size:1.02rem}
+
+/* ===== NAV ===== */
+header.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 5vw;transition:all .5s var(--ease);
+}
+header.nav.scrolled{
+  background:rgba(251,253,248,.78);backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:0 1px 0 rgba(50,98,82,.12),0 20px 40px -34px rgba(12,24,18,.5);
+  padding:.7rem 5vw;
+}
+.nav .logo{display:flex;align-items:center;gap:.7rem;font-weight:800;letter-spacing:.02em}
+.nav .logo img{height:46px;width:auto;transition:height .5s var(--ease)}
+header.nav.scrolled .logo img{height:40px}
+.nav-links{display:flex;align-items:center;gap:2.2rem}
+.nav-links a{font-size:.9rem;font-weight:600;color:var(--emerald-d);position:relative;opacity:.85;transition:opacity .3s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--lime);transition:width .4s var(--ease)}
+.nav-links a:hover{opacity:1}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:flex;align-items:center;gap:1rem}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+.burger span{width:26px;height:2px;background:var(--emerald-d);border-radius:2px;transition:.4s}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;
+  padding:9rem 0 5rem;overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(1200px 700px at 80% -10%,rgba(155,206,137,.35),transparent 60%),
+    radial-gradient(900px 700px at 10% 110%,rgba(108,153,130,.32),transparent 55%),
+    linear-gradient(160deg,#fbfdf8 0%,#eef5e7 55%,#e3efd8 100%);
+}
+.hero .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;z-index:-1;animation:float 18s ease-in-out infinite}
+.hero .blob.b1{width:520px;height:520px;background:radial-gradient(circle at 30% 30%,var(--lime),transparent 70%);top:-120px;right:-80px}
+.hero .blob.b2{width:440px;height:440px;background:radial-gradient(circle at 30% 30%,var(--sage),transparent 70%);bottom:-140px;left:-100px;animation-delay:-6s}
+.hero .blob.b3{width:300px;height:300px;background:radial-gradient(circle at 30% 30%,var(--emerald),transparent 70%);top:40%;left:55%;opacity:.25;animation-delay:-11s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.08)}66%{transform:translate(-25px,25px) scale(.95)}}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:4rem;align-items:center;width:90%;max-width:var(--maxw);margin:0 auto}
+.hero h1{font-size:clamp(3rem,7vw,6.4rem);color:var(--emerald-d)}
+.hero h1 em{font-style:italic;color:var(--sage)}
+.hero h1 .grad{background:linear-gradient(110deg,var(--emerald),var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.18rem;color:#3c4b43;max-width:30rem;margin:1.6rem 0 2.4rem;font-weight:400}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.hero-tags{display:flex;gap:1.6rem;margin-top:2.6rem;flex-wrap:wrap}
+.hero-tags div{font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-d);display:flex;align-items:center;gap:.5em;opacity:.85}
+.hero-tags div::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(155,206,137,.25)}
+
+/* hero visual — stacked glass product cards */
+.hero-visual{position:relative;height:520px;perspective:1400px}
+.hero-card{
+  position:absolute;border-radius:26px;overflow:hidden;
+  box-shadow:var(--shadow-card);background:#fff;
+  transform-style:preserve-3d;will-change:transform;
+}
+.hero-card img{width:100%;height:100%;object-fit:cover}
+.hero-card .ph{width:100%;height:100%}
+.hc1{width:62%;height:78%;top:6%;left:2%;z-index:3;animation:cardfloat 9s ease-in-out infinite}
+.hc2{width:46%;height:54%;bottom:0;right:0;z-index:4;animation:cardfloat 9s ease-in-out infinite;animation-delay:-3s}
+.hc3{width:34%;height:34%;top:0;right:6%;z-index:5;border-radius:50%;animation:cardfloat 9s ease-in-out infinite;animation-delay:-6s}
+@keyframes cardfloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-18px) rotate(-1deg)}}
+.hero-badge{
+  position:absolute;z-index:8;bottom:8%;left:-4%;background:rgba(255,255,255,.85);
+  backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.7);
+  border-radius:18px;padding:1rem 1.3rem;box-shadow:var(--shadow-soft);
+  display:flex;align-items:center;gap:.9rem;
+}
+.hero-badge .n{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;color:var(--emerald);line-height:1}
+.hero-badge .t{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:#52605a;font-weight:600}
+
+/* photo placeholders (graceful luxury fallbacks with brand leaf texture) */
+.ph{
+  position:relative;background-size:cover;background-position:center;overflow:hidden;
+  display:grid;place-items:center;
+}
+/* organic leaf pattern overlay (inline SVG data-uri, brand greens) */
+.ph::before{
+  content:"";position:absolute;inset:-10%;opacity:.18;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='none' stroke='%23ffffff' stroke-width='1.4' opacity='0.9'><path d='M30 95 C30 60 50 40 85 30 C70 60 60 80 30 95 Z'/><path d='M85 30 C60 45 45 65 35 90'/></g></svg>");
+  background-size:90px 90px;mix-blend-mode:overlay;
+}
+/* soft vignette + sheen */
+.ph::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 30% 20%,rgba(255,255,255,.35),transparent 55%),
+             radial-gradient(120% 120% at 80% 100%,rgba(12,24,18,.28),transparent 60%);
+}
+/* centered brand glyph */
+.ph .glyph{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:2.4rem;
+  font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.04em;text-shadow:0 2px 10px rgba(12,24,18,.25)}
+.ph-a{background:linear-gradient(150deg,#b6e29f,#6c9982 65%,#1d4234)}
+.ph-b{background:linear-gradient(150deg,#eaf3e2,#9bce89 55%,#6c9982)}
+.ph-c{background:linear-gradient(150deg,#326252,#0c1812)}
+.ph-d{background:linear-gradient(150deg,#f4f8ef,#cfe6b8 70%,#9bce89)}
+
+.scroll-cue{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.6rem;color:var(--emerald-d);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;opacity:.7}
+.scroll-cue .mouse{width:24px;height:38px;border:2px solid var(--emerald-d);border-radius:14px;position:relative}
+.scroll-cue .mouse::after{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:4px;height:8px;border-radius:3px;background:var(--emerald-d);animation:scrolldot 1.6s infinite}
+@keyframes scrolldot{0%{opacity:1;top:7px}70%{opacity:0;top:18px}100%{opacity:0}}
+
+/* ===== MARQUEE STRIP ===== */
+.marquee{background:var(--emerald-d);color:var(--cream);padding:1.1rem 0;overflow:hidden;white-space:nowrap}
+.marquee .track{display:inline-flex;gap:3.5rem;animation:scrollx 28s linear infinite;will-change:transform}
+.marquee span{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;display:inline-flex;align-items:center;gap:1.4rem;opacity:.92}
+.marquee span::after{content:"✦";color:var(--lime);font-style:normal;font-size:1rem}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ===== SECTION BASE ===== */
+section{position:relative}
+.section-pad{padding:7.5rem 0}
+.section-head{max-width:46rem;margin-bottom:3.5rem}
+.section-head h2{font-size:clamp(2.4rem,4.6vw,4rem);color:var(--emerald-d);margin:1rem 0 .8rem}
+.section-head p{color:#4d5b53;font-size:1.08rem;max-width:38rem}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(38px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+[data-delay="1"]{transition-delay:.1s}[data-delay="2"]{transition-delay:.2s}[data-delay="3"]{transition-delay:.3s}[data-delay="4"]{transition-delay:.4s}[data-delay="5"]{transition-delay:.5s}
+
+/* ===== ABOUT ===== */
+.about{background:var(--paper)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4.5rem;align-items:center}
+.about-figure{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:4/5;box-shadow:var(--shadow-card)}
+.about-figure img,.about-figure .ph{width:100%;height:100%;object-fit:cover}
+.about-figure .tag{position:absolute;left:1.4rem;bottom:1.4rem;background:rgba(12,24,18,.55);backdrop-filter:blur(8px);color:#fff;padding:.7rem 1.1rem;border-radius:12px;font-size:.82rem;letter-spacing:.04em}
+.about h2{font-size:clamp(2.2rem,4vw,3.4rem);color:var(--emerald-d);margin:1rem 0 1.2rem}
+.about p{color:#46544c;margin-bottom:1.1rem}
+.about .stats{display:flex;gap:2.5rem;margin-top:2rem}
+.stat .num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;color:var(--emerald);line-height:1}
+.stat .lbl{font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:#52605a;font-weight:600}
+
+/* ===== PRODUCTS ===== */
+.products{background:linear-gradient(180deg,#eef5e7,#f4f8ef)}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem}
+.prod-card{
+  position:relative;background:#fff;border-radius:22px;padding:0;overflow:hidden;
+  box-shadow:0 18px 50px -34px rgba(29,66,52,.5);
+  transition:transform .6s var(--ease),box-shadow .6s var(--ease);
+  transform-style:preserve-3d;will-change:transform;border:1px solid rgba(108,153,130,.12);
+}
+.prod-card:hover{box-shadow:var(--shadow-card)}
+.prod-media{height:250px;position:relative;overflow:hidden}
+.prod-media img,.prod-media .ph{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
+.prod-card:hover .prod-media img,.prod-card:hover .prod-media .ph{transform:scale(1.09)}
+.prod-media .chip{position:absolute;top:1rem;left:1rem;z-index:3;background:rgba(255,255,255,.92);color:var(--emerald-d);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .8rem;border-radius:100px}
+
+/* product illustration stage */
+.art{width:100%;height:100%;display:grid;place-items:center;position:relative}
+.psvg{width:82%;height:82%;filter:drop-shadow(0 16px 22px rgba(12,24,18,.18));transition:transform 1.1s var(--ease)}
+.prod-card:hover .prod-media .psvg{transform:scale(1.07) translateY(-4px)}
+.pimg{filter:drop-shadow(0 20px 26px rgba(12,24,18,.26));transition:transform 1.1s var(--ease);position:relative;z-index:2}
+.prod-media .pimg{width:86%;height:86%;object-fit:contain}
+.prod-card:hover .prod-media .pimg{transform:scale(1.06) translateY(-5px)}
+.hero-card .pimg{width:90%;height:90%;object-fit:contain}
+.about-figure .art .pimg{width:94%;height:94%;object-fit:contain}
+.stage-a{background:radial-gradient(circle at 50% 34%,#ffffff,#eef5e7 58%,#cfe6b8)}
+.stage-b{background:radial-gradient(circle at 50% 34%,#f6faf1,#d7ebc4 62%,#9bce89)}
+.stage-c{background:radial-gradient(circle at 50% 32%,#eef5e7,#9bce89 70%,#6c9982)}
+.stage-d{background:radial-gradient(circle at 50% 34%,#ffffff,#e7f0db 58%,#b6e29f)}
+.art::after{content:"";position:absolute;inset:0;background:radial-gradient(130% 80% at 50% 8%,rgba(255,255,255,.5),transparent 50%),radial-gradient(120% 120% at 70% 110%,rgba(12,24,18,.10),transparent 55%);pointer-events:none}
+.prod-body{padding:1.5rem 1.6rem 1.8rem}
+.prod-body h3{font-size:1.7rem;color:var(--emerald-d);margin-bottom:.4rem}
+.prod-body p{font-size:.92rem;color:#566;line-height:1.55}
+.prod-body .more{margin-top:1rem;font-size:.82rem;font-weight:700;letter-spacing:.05em;color:var(--sage);display:inline-flex;align-items:center;gap:.4em;transition:gap .3s}
+.prod-card:hover .more{gap:.9em}
+
+/* ===== FEATURES ===== */
+.features{background:var(--emerald-d);color:var(--cream);overflow:hidden}
+.features::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 400px at 85% 10%,rgba(155,206,137,.18),transparent 60%);pointer-events:none}
+.features .section-head h2{color:#fff}
+.features .section-head p{color:rgba(244,248,239,.75)}
+.features .eyebrow{color:var(--lime)}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+.feat{padding:2rem 1.6rem;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);transition:transform .5s var(--ease),background .5s}
+.feat:hover{transform:translateY(-8px);background:rgba(255,255,255,.08)}
+.feat .ic{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--lime),var(--sage));margin-bottom:1.2rem}
+.feat .ic svg{width:26px;height:26px;stroke:var(--emerald-d);fill:none;stroke-width:1.8}
+.feat h3{font-size:1.5rem;color:#fff;margin-bottom:.5rem}
+.feat p{font-size:.9rem;color:rgba(244,248,239,.72)}
+
+/* ===== PROCESS ===== */
+.process{background:var(--paper)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;counter-reset:s}
+.step{position:relative;padding-top:1rem}
+.step::before{counter-increment:s;content:"0" counter(s);font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;color:transparent;-webkit-text-stroke:1.5px var(--sage);opacity:.5;display:block;line-height:.8;margin-bottom:1rem}
+.step h3{font-size:1.7rem;color:var(--emerald-d);margin-bottom:.5rem}
+.step p{color:#566;font-size:.96rem}
+
+/* ===== CTA BAND ===== */
+.cta-band{
+  position:relative;overflow:hidden;color:#fff;text-align:center;padding:6.5rem 0;
+  background:linear-gradient(135deg,var(--emerald),var(--emerald-d) 60%,var(--ink));
+}
+.cta-band .blob{position:absolute;width:480px;height:480px;border-radius:50%;filter:blur(70px);opacity:.4;background:var(--lime)}
+.cta-band .bb1{top:-180px;left:-80px}
+.cta-band .bb2{bottom:-200px;right:-60px;background:var(--sage)}
+.cta-band h2{font-size:clamp(2.4rem,5.5vw,4.6rem);position:relative}
+.cta-band p{color:rgba(244,248,239,.82);max-width:36rem;margin:1.2rem auto 2.4rem;position:relative}
+.cta-band .btn{--bg:#fff;color:var(--emerald-d)}
+.cta-band .btn::after{background:linear-gradient(120deg,var(--lime),var(--lime-bright))}
+
+/* ===== CONTACT ===== */
+.contact{background:linear-gradient(180deg,#f4f8ef,#eaf3e2)}
+.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:4rem;align-items:start}
+.contact h2{font-size:clamp(2.2rem,4vw,3.4rem);color:var(--emerald-d);margin:1rem 0 1.2rem}
+.contact .lead{color:#46544c;margin-bottom:2rem;max-width:30rem}
+.contact-info{display:flex;flex-direction:column;gap:1.2rem}
+.ci{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.3rem;background:#fff;border-radius:16px;box-shadow:0 14px 40px -30px rgba(29,66,52,.5);transition:transform .4s var(--ease)}
+.ci:hover{transform:translateX(6px)}
+.ci .ic{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--lime),var(--sage));display:grid;place-items:center;flex:0 0 auto}
+.ci .ic svg{width:22px;height:22px;stroke:var(--emerald-d);fill:none;stroke-width:1.8}
+.ci .t{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:#8a968f;font-weight:700}
+.ci .v{font-size:1.05rem;font-weight:600;color:var(--emerald-d)}
+form.quote{background:#fff;border-radius:24px;padding:2.4rem;box-shadow:var(--shadow-card)}
+form.quote .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:#6a766f;margin-bottom:.4rem}
+.field input,.field textarea,.field select{
+  width:100%;padding:.95rem 1.1rem;border:1.5px solid #dde7d8;border-radius:12px;
+  font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--paper);transition:border .3s,box-shadow .3s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 4px rgba(108,153,130,.15)}
+.field textarea{resize:vertical;min-height:110px}
+form.quote .btn{width:100%;justify-content:center;margin-top:.4rem}
+.form-note{font-size:.78rem;color:#8a968f;text-align:center;margin-top:1rem}
+
+/* ===== FOOTER ===== */
+footer{background:var(--ink);color:rgba(244,248,239,.7);padding:4.5rem 0 2rem}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:3rem;align-items:start}
+footer .logo img{height:54px;margin-bottom:1.2rem}
+footer p.desc{font-size:.92rem;max-width:24rem;line-height:1.7}
+footer h4{color:#fff;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.2rem;font-weight:700}
+footer ul{list-style:none}
+footer ul li{margin-bottom:.7rem}
+footer ul li a{font-size:.92rem;transition:color .3s}
+footer ul li a:hover{color:var(--lime)}
+.foot-bottom{margin-top:3.5rem;padding-top:1.6rem;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.82rem;opacity:.7}
+
+/* ===== WHATSAPP FLOAT ===== */
+.wa-float{
+  position:fixed;right:1.6rem;bottom:1.6rem;z-index:200;width:62px;height:62px;border-radius:50%;
+  background:#25d366;display:grid;place-items:center;box-shadow:0 16px 40px -10px rgba(37,211,102,.6);
+  transition:transform .4s var(--ease);
+}
+.wa-float:hover{transform:scale(1.1) rotate(6deg)}
+.wa-float svg{width:32px;height:32px;fill:#fff}
+.wa-float::before{content:"";position:absolute;inset:0;border-radius:50%;background:#25d366;animation:pulse 2.4s infinite;z-index:-1}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}80%,100%{transform:scale(1.7);opacity:0}}
+
+/* progress bar */
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--lime),var(--sage),var(--emerald));z-index:300;width:0}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:980px){
+  .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:3rem}
+  .hero-visual{height:420px;order:-1}
+  .prod-grid{grid-template-columns:repeat(2,1fr)}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr;gap:2rem}
+}
+@media(max-width:640px){
+  .nav-links{
+    position:fixed;inset:0 0 0 30%;background:rgba(251,253,248,.97);backdrop-filter:blur(20px);
+    flex-direction:column;justify-content:center;padding:2rem;gap:1.8rem;transform:translateX(100%);
+    transition:transform .5s var(--ease);box-shadow:var(--shadow-soft);
+  }
+  .nav-links.open{transform:none}
+  .nav-links a{font-size:1.2rem}
+  .burger{display:flex;z-index:101}
+  .nav-cta .btn:not(.burger){display:none}
+  .prod-grid,.feat-grid{grid-template-columns:1fr}
+  form.quote .row{grid-template-columns:1fr}
+  .section-pad{padding:5rem 0}
+  .hero{padding:8rem 0 4rem}
+  .about .stats{gap:1.6rem}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<!-- PRODUCT ILLUSTRATION SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- leaf mark -->
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M12 3C7 7 5 11 5 15a7 7 0 0 0 14 0c0-4-2-8-7-12z" fill="currentColor"/><path d="M12 20V8" stroke="#1d4234" stroke-width="1" opacity=".4" fill="none"/></symbol>
+
+    <!-- paper cup -->
+    <symbol id="i-cup" viewBox="0 0 240 200">
+      <ellipse cx="120" cy="178" rx="52" ry="8" fill="#0c1812" opacity=".10"/>
+      <path d="M83 58 L157 58 L148 156 Q147 162 141 162 L99 162 Q93 162 92 156 Z" fill="#ffffff" stroke="#1d4234" stroke-width="2.6" stroke-linejoin="round"/>
+      <ellipse cx="120" cy="58" rx="37" ry="8.5" fill="#eaf3e2" stroke="#1d4234" stroke-width="2.6"/>
+      <ellipse cx="120" cy="58" rx="29" ry="5.5" fill="#cfe6b8"/>
+      <path d="M89 90 L151 90 L148 122 L92 122 Z" fill="#326252"/>
+      <path d="M89 90 L151 90 L150 96 L90 96 Z" fill="#1d4234" opacity=".5"/>
+      <g transform="translate(110 98) scale(0.85)" color="#cfe6b8"><use href="#i-leaf" width="24" height="24"/></g>
+      <path d="M99 130 L141 130" stroke="#cfe6b8" stroke-width="2" opacity=".5"/>
+    </symbol>
+
+    <!-- cup with sleeve (fajilla) -->
+    <symbol id="i-sleeve" viewBox="0 0 240 200">
+      <ellipse cx="120" cy="178" rx="52" ry="8" fill="#0c1812" opacity=".10"/>
+      <path d="M83 58 L157 58 L148 156 Q147 162 141 162 L99 162 Q93 162 92 156 Z" fill="#ffffff" stroke="#1d4234" stroke-width="2.6" stroke-linejoin="round"/>
+      <ellipse cx="120" cy="58" rx="37" ry="8.5" fill="#eaf3e2" stroke="#1d4234" stroke-width="2.6"/>
+      <ellipse cx="120" cy="58" rx="29" ry="5.5" fill="#cfe6b8"/>
+      <path d="M88 86 L152 86 L149 130 L91 130 Z" fill="#8d9b6b" stroke="#1d4234" stroke-width="2.4" stroke-linejoin="round"/>
+      <g stroke="#6f7c4f" stroke-width="2" opacity=".55"><path d="M96 88 L94 128"/><path d="M106 88 L104.5 128"/><path d="M116 88 L115 128"/><path d="M126 88 L125.5 128"/><path d="M136 88 L136 128"/><path d="M146 88 L147 128"/></g>
+      <g transform="translate(110 98) scale(0.8)" color="#eaf3e2"><use href="#i-leaf" width="24" height="24"/></g>
+    </symbol>
+
+    <!-- dome lid (tapas) -->
+    <symbol id="i-lid" viewBox="0 0 240 200">
+      <ellipse cx="120" cy="176" rx="50" ry="8" fill="#0c1812" opacity=".10"/>
+      <ellipse cx="120" cy="150" rx="48" ry="12" fill="#cfe6b8" stroke="#1d4234" stroke-width="2.6"/>
+      <path d="M74 150 Q120 92 166 150" fill="#ffffff" stroke="#1d4234" stroke-width="2.6"/>
+      <ellipse cx="120" cy="150" rx="48" ry="12" fill="none" stroke="#1d4234" stroke-width="2.6"/>
+      <path d="M93 134 Q102 112 120 105" stroke="#ffffff" stroke-width="6" opacity=".7" fill="none" stroke-linecap="round"/>
+      <ellipse cx="120" cy="112" rx="11" ry="4.5" fill="#6c9982" stroke="#1d4234" stroke-width="2"/>
+      <path d="M120 112 Q120 102 132 100" stroke="#1d4234" stroke-width="2" fill="none" opacity=".5"/>
+    </symbol>
+
+    <!-- clamshell sugarcane bagasse -->
+    <symbol id="i-clam" viewBox="0 0 240 200">
+      <ellipse cx="122" cy="176" rx="66" ry="9" fill="#0c1812" opacity=".10"/>
+      <path d="M58 96 L150 74 L198 98 L106 120 Z" fill="#cfc699" stroke="#6f6638" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M58 96 L58 132 L106 156 L106 120 Z" fill="#b3aa78" stroke="#6f6638" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M106 120 L198 98 L198 134 L106 156 Z" fill="#c2b985" stroke="#6f6638" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M106 138 L198 116" stroke="#6f6638" stroke-width="2" opacity=".55"/>
+      <path d="M58 114 L106 138" stroke="#6f6638" stroke-width="2" opacity=".55"/>
+      <rect x="138" y="120" width="20" height="9" rx="2" fill="#b3aa78" stroke="#6f6638" stroke-width="2" transform="rotate(-14 148 124)"/>
+    </symbol>
+
+    <!-- clamshell wheat straw -->
+    <symbol id="i-clam2" viewBox="0 0 240 200">
+      <ellipse cx="122" cy="176" rx="66" ry="9" fill="#0c1812" opacity=".10"/>
+      <path d="M58 96 L150 74 L198 98 L106 120 Z" fill="#e4dcb4" stroke="#8a7e4c" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M58 96 L58 132 L106 156 L106 120 Z" fill="#cfc596" stroke="#8a7e4c" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M106 120 L198 98 L198 134 L106 156 Z" fill="#dad09f" stroke="#8a7e4c" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M106 138 L198 116" stroke="#8a7e4c" stroke-width="2" opacity=".5"/>
+      <path d="M58 114 L106 138" stroke="#8a7e4c" stroke-width="2" opacity=".5"/>
+      <g fill="#a89a5e" opacity=".5"><circle cx="130" cy="108" r="1.5"/><circle cx="150" cy="104" r="1.5"/><circle cx="168" cy="112" r="1.5"/><circle cx="90" cy="130" r="1.5"/><circle cx="120" cy="140" r="1.5"/></g>
+    </symbol>
+
+    <!-- wax / grease-resistant paper sheets -->
+    <symbol id="i-wax" viewBox="0 0 240 200">
+      <ellipse cx="120" cy="174" rx="58" ry="9" fill="#0c1812" opacity=".10"/>
+      <rect x="74" y="62" width="96" height="94" rx="7" fill="#e7e0cd" stroke="#1d4234" stroke-width="2.4" transform="rotate(-11 122 112)"/>
+      <rect x="74" y="62" width="96" height="94" rx="7" fill="#f2ecda" stroke="#1d4234" stroke-width="2.4" transform="rotate(5 118 110)"/>
+      <rect x="74" y="62" width="96" height="94" rx="7" fill="#ffffff" stroke="#1d4234" stroke-width="2.4" transform="rotate(-2 120 110)"/>
+      <g transform="rotate(-2 120 110)" opacity=".5"><path d="M86 90 H158 M86 104 H158 M86 118 H158 M86 132 H140" stroke="#cfe6b8" stroke-width="2.2"/></g>
+      <g transform="rotate(-2 120 110) translate(120 78) scale(0.7)" color="#9bce89"><use href="#i-leaf" width="24" height="24"/></g>
+    </symbol>
+
+    <!-- PET clear cup + dome + straw -->
+    <symbol id="i-pet" viewBox="0 0 240 200">
+      <ellipse cx="120" cy="178" rx="50" ry="8" fill="#0c1812" opacity=".10"/>
+      <path d="M86 72 L154 72 L146 158 Q145 163 140 163 L100 163 Q95 163 94 158 Z" fill="#9bce89" fill-opacity=".22" stroke="#4f7d66" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M97 120 L143 120 L146 158 Q145 163 140 163 L100 163 Q95 163 94 158 Z" fill="#6c9982" fill-opacity=".45"/>
+      <ellipse cx="120" cy="72" rx="34" ry="8" fill="#eaf3e2" fill-opacity=".7" stroke="#4f7d66" stroke-width="2.4"/>
+      <path d="M88 72 Q120 46 152 72" fill="#ffffff" fill-opacity=".5" stroke="#4f7d66" stroke-width="2.2"/>
+      <path d="M104 84 L99 150" stroke="#ffffff" stroke-width="6" opacity=".55" stroke-linecap="round"/>
+      <rect x="129" y="28" width="9" height="60" rx="4" fill="#326252" transform="rotate(13 133 58)"/>
+      <rect x="129" y="40" width="9" height="20" rx="4" fill="#9bce89" transform="rotate(13 133 58)"/>
+    </symbol>
+
+    <!-- about scene -->
+    <symbol id="i-scene" viewBox="0 0 300 380">
+      <circle cx="150" cy="150" r="120" fill="#ffffff" opacity=".45"/>
+      <g transform="translate(28 36) scale(0.95)"><use href="#i-cup"/></g>
+      <g transform="translate(40 178) scale(0.85)"><use href="#i-clam"/></g>
+      <g transform="translate(214 250) scale(1.6) rotate(18)" color="#6c9982" opacity=".8"><use href="#i-leaf" width="24" height="24"/></g>
+      <g transform="translate(40 40) scale(1.3) rotate(-22)" color="#9bce89" opacity=".75"><use href="#i-leaf" width="24" height="24"/></g>
+      <g transform="translate(244 60) scale(1.0) rotate(30)" color="#cfe6b8"><use href="#i-leaf" width="24" height="24"/></g>
+    </symbol>
+  </defs>
+</svg>
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a href="#top" class="logo"><img src="logo.png" alt="GreeNova SC" /></a>
+  <nav class="nav-links" id="navLinks">
+    <a href="#nosotros">Nosotros</a>
+    <a href="#productos">Productos</a>
+    <a href="#sostenibilidad">Sostenibilidad</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+  <div class="nav-cta">
+    <a href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20quiero%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener" class="btn"><span>Cotizar ahora</span></a>
+    <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow reveal">Desechables grado alimenticio</span>
+      <h1 class="reveal" data-delay="1">El futuro del<br><span class="grad">empaque</span> es <em>limpio</em>.</h1>
+      <p class="lead reveal" data-delay="2">En GreeNova SC fabricamos y comercializamos desechables biodegradables y compostables que elevan tu marca y cuidan el planeta. Calidad premium para el sector alimenticio.</p>
+      <div class="hero-cta reveal" data-delay="3">
+        <a href="#productos" class="btn lg"><span>Ver productos</span></a>
+        <a href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20quiero%20informaci%C3%B3n." target="_blank" rel="noopener" class="btn ghost lg"><span>Hablar por WhatsApp</span></a>
+      </div>
+      <div class="hero-tags reveal" data-delay="4">
+        <div>100% Biodegradable</div>
+        <div>Compostable</div>
+        <div>Hecho en México</div>
+      </div>
+    </div>
+    <div class="hero-visual reveal" data-delay="2">
+      <div class="hero-card hc1 tilt"><div class="art stage-a"><img class="pimg" src="vaso.png" alt="Vaso de papel" loading="lazy" /></div></div>
+      <div class="hero-card hc2 tilt"><div class="art stage-b"><img class="pimg" src="encerado.png" alt="Papel encerado" loading="lazy" /></div></div>
+      <div class="hero-card hc3 tilt"><div class="art stage-c"><img class="pimg" src="tapa_pet.png" alt="Tapa domo PET" loading="lazy" /></div></div>
+      <div class="hero-badge">
+        <span class="n">∞</span>
+        <span class="t">Catálogo<br>completo</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="mouse"></div><span>Desliza</span></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="track">
+    <span>Vasos de papel</span><span>Fajillas para vaso</span><span>Tapas PP &amp; PLA</span><span>Almeja de bagazo de caña</span><span>Almeja de paja de trigo</span><span>Papel encerado &amp; RH</span><span>Vasos &amp; tapas PET</span>
+    <span>Vasos de papel</span><span>Fajillas para vaso</span><span>Tapas PP &amp; PLA</span><span>Almeja de bagazo de caña</span><span>Almeja de paja de trigo</span><span>Papel encerado &amp; RH</span><span>Vasos &amp; tapas PET</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about section-pad" id="nosotros">
+  <div class="wrap about-grid">
+    <div class="about-figure reveal">
+      <div class="art stage-d"><img class="pimg" src="coleccion.png" alt="Línea de productos GreeNova" loading="lazy" /></div>
+      <div class="tag">Materiales nobles · origen vegetal</div>
+    </div>
+    <div class="about-copy reveal" data-delay="1">
+      <span class="eyebrow">Quiénes somos</span>
+      <h2>Empaque consciente,<br>presentación de lujo.</h2>
+      <p>GreeNova SC nace para transformar la manera en que el sector alimenticio sirve y entrega sus productos. Comercializamos una línea integral de desechables biodegradables y compostables que combinan resistencia, estética y responsabilidad ambiental.</p>
+      <p>Cada pieza está pensada para que tu marca luzca impecable mientras reduces tu huella. De la cafetería boutique al restaurante de alto volumen, tenemos la solución a tu medida.</p>
+      <div class="stats">
+        <div class="stat"><div class="num" data-count="100">0</div><div class="lbl">% Biodegradable</div></div>
+        <div class="stat"><div class="num" data-count="7" data-suffix="+">0</div><div class="lbl">Líneas de producto</div></div>
+        <div class="stat"><div class="num" data-count="24" data-suffix="h">0</div><div class="lbl">Respuesta a cotización</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products section-pad" id="productos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Catálogo</span>
+      <h2>Productos que enamoran<br>a la vista y al planeta.</h2>
+      <p>Una selección curada de desechables grado alimenticio. Todos disponibles para venta y comercialización al mayoreo.</p>
+    </div>
+    <div class="prod-grid">
+      <article class="prod-card tilt reveal" data-delay="1">
+        <div class="prod-media art stage-a"><span class="chip">Papel</span><img class="pimg" src="vaso.png" alt="Vasos de papel" loading="lazy" /></div>
+        <div class="prod-body"><h3>Vasos de papel</h3><p>Para bebidas frías y calientes. Recubrimiento de origen vegetal, sensación premium al tacto y listos para personalizar tu marca.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="2">
+        <div class="prod-media art stage-b"><span class="chip">Accesorio</span><img class="pimg" src="fajilla.png" alt="Fajillas para vaso" loading="lazy" /></div>
+        <div class="prod-body"><h3>Fajillas para vaso</h3><p>Protección térmica con acabado kraft elegante. El detalle perfecto para una experiencia de marca cuidada y sostenible.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="3">
+        <div class="prod-media art stage-d"><span class="chip">PP · PLA</span><img class="pimg" src="tapa.png" alt="Tapas para vaso" loading="lazy" /></div>
+        <div class="prod-body"><h3>Tapas PP &amp; PLA</h3><p>Tapas resistentes en polipropileno y PLA compostable. Ajuste perfecto, antiderrames y compatibles con toda nuestra línea de vasos.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="1">
+        <div class="prod-media art stage-a"><span class="chip">Bagazo de caña</span><img class="pimg" src="almeja.png" alt="Almeja de bagazo de caña" loading="lazy" /></div>
+        <div class="prod-body"><h3>Almeja de bagazo de caña</h3><p>Contenedores robustos y compostables, resistentes a grasas y calor. Ideales para comida para llevar con presentación impecable.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="2">
+        <div class="prod-media art stage-b"><span class="chip">Paja de trigo</span><img class="pimg" src="almeja_trigo.png" alt="Almeja de paja de trigo" loading="lazy" /></div>
+        <div class="prod-body"><h3>Almeja de paja de trigo</h3><p>Fibra natural de trigo, ligera y biodegradable. Textura cálida y look artesanal que distingue a tu negocio del resto.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="3">
+        <div class="prod-media art stage-d"><span class="chip">Papel</span><img class="pimg" src="papel.png" alt="Papel encerado y RH" loading="lazy" /></div>
+        <div class="prod-body"><h3>Papel encerado &amp; RH</h3><p>Hojas antigrasa para envolver, separar y servir. Resistentes a la humedad, perfectas para hamburguesas, panadería y charcutería.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="1">
+        <div class="prod-media art stage-c"><span class="chip">PET</span><img class="pimg" src="pet.png" alt="Vasos y tapas PET" loading="lazy" /></div>
+        <div class="prod-body"><h3>Vasos &amp; tapas PET</h3><p>Cristalinos y resistentes para bebidas frías, smoothies y postres. Transparencia total que luce tu producto como en vitrina.</p><span class="more">Solicitar info →</span></div>
+      </article>
+      <article class="prod-card tilt reveal" data-delay="2" style="background:linear-gradient(150deg,var(--emerald),var(--emerald-d));color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;min-height:340px">
+        <div style="padding:2rem">
+          <h3 style="color:#fff;font-size:2rem;margin-bottom:.6rem">¿Buscas algo más?</h3>
+          <p style="color:rgba(244,248,239,.8);margin-bottom:1.4rem">Manejamos catálogo completo de desechables eco. Cuéntanos qué necesitas.</p>
+          <a href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20busco%20un%20producto%20espec%C3%ADfico." target="_blank" rel="noopener" class="btn" style="--bg:#fff;color:var(--emerald-d)"><span>Pregúntanos</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES / SUSTAINABILITY -->
+<section class="features section-pad" id="sostenibilidad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Por qué GreeNova</span>
+      <h2>Lujo que también es responsable.</h2>
+      <p>No tienes que elegir entre verte bien y hacer lo correcto. Nuestros productos entregan ambas cosas.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal" data-delay="1">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3C7 7 5 11 5 15a7 7 0 0 0 14 0c0-4-2-8-7-12z"/></svg></div>
+        <h3>Biodegradable</h3>
+        <p>Materiales de origen vegetal que regresan a la tierra sin dejar microplásticos.</p>
+      </div>
+      <div class="feat reveal" data-delay="2">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Compostable</h3>
+        <p>Certificable para compostaje. Convierte tus desechos en parte del ciclo natural.</p>
+      </div>
+      <div class="feat reveal" data-delay="3">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></div>
+        <h3>Grado alimenticio</h3>
+        <p>Seguros para contacto directo con alimentos y bebidas, fríos o calientes.</p>
+      </div>
+      <div class="feat reveal" data-delay="4">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h3>Calidad premium</h3>
+        <p>Acabados que elevan la percepción de tu marca en cada entrega.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process section-pad" id="proceso">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Cómo trabajamos</span>
+      <h2>De la cotización a tu puerta.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal" data-delay="1"><h3>Cuéntanos</h3><p>Escríbenos por WhatsApp con los productos y volúmenes que necesitas. Te asesoramos sin compromiso.</p></div>
+      <div class="step reveal" data-delay="2"><h3>Cotizamos</h3><p>Recibe una propuesta clara y competitiva en menos de 24 horas, a la medida de tu negocio.</p></div>
+      <div class="step reveal" data-delay="3"><h3>Entregamos</h3><p>Coordinamos tu pedido y entrega para que nunca te falte el empaque que tu marca merece.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="blob bb1"></div><div class="blob bb2"></div>
+  <div class="wrap reveal">
+    <h2>Hablemos de tu próximo pedido.</h2>
+    <p>Atención personalizada y respuesta rápida. Estamos a un mensaje de distancia.</p>
+    <a href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20quiero%20cotizar%20desechables%20eco." target="_blank" rel="noopener" class="btn lg"><span>Cotizar por WhatsApp</span></a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact section-pad" id="contacto">
+  <div class="wrap contact-grid">
+    <div class="contact-copy reveal">
+      <span class="eyebrow">Contacto</span>
+      <h2>Listos para servirte.</h2>
+      <p class="lead">Solicita tu cotización o resuelve tus dudas. Te respondemos personalmente.</p>
+      <div class="contact-btn">
+        <a href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20quiero%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener" class="btn lg">
+          <svg viewBox="0 0 32 32" width="20" height="20" style="fill:currentColor;position:relative;z-index:2"><path d="M16.001 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.35.616 4.652 1.787 6.683L2.56 29.44l6.92-1.813A13.27 13.27 0 0 0 16 29.333C23.362 29.333 29.333 23.362 29.333 16S23.362 2.667 16.001 2.667zm0 24a11.3 11.3 0 0 1-5.76-1.579l-.413-.245-4.107 1.077 1.096-4.005-.269-.413A11.27 11.27 0 0 1 4.667 16c0-6.25 5.085-11.333 11.334-11.333 3.027 0 5.872 1.179 8.013 3.32a11.26 11.26 0 0 1 3.32 8.013c0 6.25-5.084 11.333-11.333 11.333zm6.213-8.493c-.341-.171-2.016-.995-2.328-1.109-.312-.114-.539-.171-.766.171-.227.341-.879 1.109-1.078 1.336-.198.227-.397.256-.738.085-.341-.171-1.439-.53-2.741-1.691-1.013-.903-1.697-2.018-1.896-2.36-.198-.341-.021-.526.15-.696.154-.153.341-.398.512-.597.171-.199.227-.341.341-.569.114-.227.057-.426-.029-.597-.085-.171-.766-1.847-1.05-2.528-.276-.663-.557-.573-.766-.584l-.653-.012a1.25 1.25 0 0 0-.909.426c-.312.341-1.192 1.165-1.192 2.841s1.22 3.295 1.391 3.522c.171.227 2.401 3.666 5.816 5.141.813.351 1.447.561 1.941.718.816.259 1.558.222 2.145.135.654-.098 2.016-.824 2.3-1.62.284-.796.284-1.478.198-1.62-.085-.142-.312-.227-.653-.398z"/></svg>
+          <span>Escríbenos por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+    <form class="quote reveal" data-delay="1" id="quoteForm">
+      <div class="row">
+        <div class="field"><label for="n">Nombre</label><input id="n" type="text" required placeholder="Tu nombre" /></div>
+        <div class="field"><label for="e">Empresa</label><input id="e" type="text" placeholder="Tu negocio" /></div>
+      </div>
+      <div class="field"><label for="p">Producto de interés</label>
+        <select id="p">
+          <option>Vasos de papel</option>
+          <option>Fajillas para vaso</option>
+          <option>Tapas PP / PLA</option>
+          <option>Almeja de bagazo de caña</option>
+          <option>Almeja de paja de trigo</option>
+          <option>Papel encerado / RH</option>
+          <option>Vasos y tapas PET</option>
+          <option>Varios / catálogo completo</option>
+        </select>
+      </div>
+      <div class="field"><label for="m">Mensaje</label><textarea id="m" placeholder="Cuéntanos cantidades, fechas o cualquier detalle..."></textarea></div>
+      <button type="submit" class="btn"><span>Enviar por WhatsApp</span></button>
+      <p class="form-note">Al enviar, abriremos WhatsApp con tu mensaje listo para mandar.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="logo"><img src="logo_white.png" alt="GreeNova SC" /></div>
+      <p class="desc">Venta y comercialización de desechables biodegradables y compostables grado alimenticio. Empaque consciente con presentación de lujo para el sector alimenticio.</p>
+    </div>
+    <div>
+      <h4>Productos</h4>
+      <ul>
+        <li><a href="#productos">Vasos de papel</a></li>
+        <li><a href="#productos">Tapas PP &amp; PLA</a></li>
+        <li><a href="#productos">Almejas eco</a></li>
+        <li><a href="#productos">Vasos &amp; tapas PET</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="https://wa.me/525522601113" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="tel:+525522601113">55 2260 1113</a></li>
+        <li><a href="#contacto">Cotizar</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© <span id="yr"></span> GreeNova SC. Todos los derechos reservados.</span>
+    <span>Empaque biodegradable &amp; compostable · Hecho en México</span>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/525522601113?text=Hola%20GreeNova%20SC,%20quiero%20una%20cotizaci%C3%B3n." target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16.001 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.35.616 4.652 1.787 6.683L2.56 29.44l6.92-1.813A13.27 13.27 0 0 0 16 29.333C23.362 29.333 29.333 23.362 29.333 16S23.362 2.667 16.001 2.667zm0 24a11.3 11.3 0 0 1-5.76-1.579l-.413-.245-4.107 1.077 1.096-4.005-.269-.413A11.27 11.27 0 0 1 4.667 16c0-6.25 5.085-11.333 11.334-11.333 3.027 0 5.872 1.179 8.013 3.32a11.26 11.26 0 0 1 3.32 8.013c0 6.25-5.084 11.333-11.333 11.333zm6.213-8.493c-.341-.171-2.016-.995-2.328-1.109-.312-.114-.539-.171-.766.171-.227.341-.879 1.109-1.078 1.336-.198.227-.397.256-.738.085-.341-.171-1.439-.53-2.741-1.691-1.013-.903-1.697-2.018-1.896-2.36-.198-.341-.021-.526.15-.696.154-.153.341-.398.512-.597.171-.199.227-.341.341-.569.114-.227.057-.426-.029-.597-.085-.171-.766-1.847-1.05-2.528-.276-.663-.557-.573-.766-.584l-.653-.012a1.25 1.25 0 0 0-.909.426c-.312.341-1.192 1.165-1.192 2.841s1.22 3.295 1.391 3.522c.171.227 2.401 3.666 5.816 5.141.813.351 1.447.561 1.941.718.816.259 1.558.222 2.145.135.654-.098 2.016-.824 2.3-1.62.284-.796.284-1.478.198-1.62-.085-.142-.312-.227-.653-.398z"/></svg>
+</a>
+
+<script>
+// graceful image fallback -> branded leaf placeholder
+function gph(img,cls){
+  var d=document.createElement('div');
+  d.className='ph '+cls;
+  d.innerHTML='<span class="glyph"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,.7)"><path d="M12 3C7 7 5 11 5 15a7 7 0 0 0 14 0c0-4-2-8-7-12z"/></svg></span>';
+  if(img.parentNode)img.parentNode.replaceChild(d,img);
+}
+// year
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+// nav scroll state + progress
+const nav=document.getElementById('nav'),prog=document.getElementById('progress');
+function onScroll(){
+  const y=window.scrollY;
+  nav.classList.toggle('scrolled',y>40);
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(y/h*100)+'%';
+}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+// mobile menu
+const burger=document.getElementById('burger'),links=document.getElementById('navLinks');
+burger.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+// reveal on scroll
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// counters
+const cio=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(e.isIntersecting){
+    const el=e.target,end=+el.dataset.count,suf=el.dataset.suffix||'';let t0=null;
+    function step(t){if(!t0)t0=t;const p=Math.min((t-t0)/1400,1);const ease=1-Math.pow(1-p,3);
+      el.textContent=Math.round(end*ease)+suf;if(p<1)requestAnimationFrame(step)}
+    requestAnimationFrame(step);cio.unobserve(el);
+  }})},{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+// 3D tilt
+const fine=window.matchMedia('(pointer:fine)').matches;
+if(fine){document.querySelectorAll('.tilt').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(900px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave',()=>{card.style.transform=''});
+});}
+
+// quote form -> whatsapp
+document.getElementById('quoteForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=document.getElementById('n').value||'',emp=document.getElementById('e').value||'',
+        p=document.getElementById('p').value,m=document.getElementById('m').value||'';
+  const txt=`Hola GreeNova SC, soy ${n}${emp?' de '+emp:''}. Me interesa: ${p}.${m?' '+m:''}`;
+  window.open('https://wa.me/525522601113?text='+encodeURIComponent(txt),'_blank');
+});
+</script>
+</body>
+</html>
