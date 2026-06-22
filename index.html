@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RÍO PODEROSO | Encuentra tu lugar</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#00F0FF',
+                            purple: '#8A2BE2',
+                            dark: '#030712', // Obsidiana profundo
+                            navy: '#0f172a'
+                        },
+                        obsidian: '#050505'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --brand-cyan: #00F0FF;
+            --brand-purple: #8A2BE2;
+        }
+        
+        body {
+            background-color: #030712;
+            color: #ffffff;
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Ambient Effects */
+        .ambient-aurora {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.03) 0%, transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+            animation: rotateAurora 60s linear infinite;
+        }
+        @keyframes rotateAurora {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, rgba(138,43,226,0.05) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            mix-blend-mode: screen;
+            filter: blur(40px);
+            will-change: transform;
+        }
+
+        /* ThreeJS Canvas */
+        #webgl-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+            mix-blend-mode: screen;
+        }
+
+        /* Cinematic Noise */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.0) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.2);
+            transform: translateY(-8px);
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            box-shadow: 0 20px 40px -10px rgba(0, 240, 255, 0.1);
+        }
+
+        /* Vector Path Utilities */
+        .rio-path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* The Spotlight Effect */
+        .text-outline-light {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+        }
+        .text-spotlight {
+            color: transparent;
+            background-image: radial-gradient(circle 300px at var(--x, -100%) var(--y, -100%), #ffffff 0%, #00F0FF 40%, #8A2BE2 70%, transparent 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-color: rgba(255,255,255,0.05);
+            will-change: background-image;
+            transition: background-color 0.3s;
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="selection:bg-brand-cyan selection:text-brand-dark hide-scroll">
+
+    <div class="ambient-aurora"></div>
+    <div class="cursor-glow" id="cursor-glow"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="relative w-full overflow-hidden">
+        
+        <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl transition-transform duration-500" id="main-nav">
+            <div class="glass-panel rounded-full px-6 py-3 flex justify-between items-center">
+                <div class="text-2xl font-display font-black tracking-tighter cursor-pointer flex items-center gap-2 text-white hover:text-brand-cyan transition-colors" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    RÍO<span class="w-2.5 h-2.5 rounded-full bg-brand-cyan shadow-[0_0_15px_#00F0FF] animate-pulse"></span>
+                </div>
+                <div class="hidden md:flex space-x-10 items-center text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    <a onclick="document.getElementById('seccion-proximo-paso').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors cursor-pointer">Próximo Paso</a>
+                    <a onclick="document.getElementById('seccion-encuentro').scrollIntoView({behavior: 'smooth'})" class="hover:text-white transition-colors cursor-pointer">Encuentro</a>
+                    <a onclick="openModal('modal-academia')" class="hover:text-white transition-colors cursor-pointer">Academia</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openModal('modal-comunidad')" class="bg-white text-brand-dark px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        Únete a la Comunidad
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="relative z-10">
+
+            <section id="hero-section" class="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-20 z-20">
+                <canvas id="webgl-canvas"></canvas>
+                
+                <div class="relative z-10 flex flex-col items-center text-center w-full max-w-7xl mx-auto px-4">
+                    <div class="gsap-hero opacity-0 translate-y-4 text-brand-cyan font-bold tracking-[0.4em] text-[10px] md:text-xs uppercase mb-8 drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+                        No estás aquí por casualidad
+                    </div>
+
+                    <h1 class="gsap-hero opacity-0 translate-y-8 flex flex-col items-center select-none mb-6 cursor-default">
+                        <span class="text-[clamp(4rem,11vw,12rem)] font-display font-black leading-none text-outline-light">ENCUENTRA</span>
+                        <!-- Spotlight Mask Applied Here -->
+                        <span id="spotlight-text" class="text-[clamp(4.5rem,12vw,14rem)] font-display font-black leading-[0.85] text-spotlight mt-[-3vw] md:mt-[-4vw]">
+                            TU LUGAR.
+                        </span>
+                    </h1>
+
+                    <p class="gsap-hero opacity-0 translate-y-8 text-lg md:text-xl text-gray-400 font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
+                        Un ecosistema vivo donde las personas encuentran propósito, familias encuentran restauración y una comunidad mundial se levanta.
+                    </p>
+
+                    <div class="gsap-hero opacity-0 translate-y-8 flex flex-col sm:flex-row gap-6 w-full sm:w-auto items-center justify-center">
+                        <button onclick="document.getElementById('seccion-proximo-paso').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto px-10 py-5 bg-white text-brand-dark rounded-full font-bold text-xs md:text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.15)]">
+                            Descubre tu propósito
+                        </button>
+                        <button onclick="document.getElementById('seccion-encuentro').scrollIntoView({behavior: 'smooth'})" class="w-full sm:w-auto px-8 py-5 rounded-full font-bold text-xs md:text-sm uppercase tracking-widest text-white hover:bg-white/5 transition-colors flex items-center justify-center gap-3 group border border-white/10">
+                            <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white group-hover:bg-white group-hover:text-brand-dark transition-all">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M5 3l14 9-14 9V3z"/></svg>
+                            </div>
+                            Ver Encuentro
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Scroll indicator -->
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                    <span class="text-[10px] uppercase tracking-widest font-bold text-white">Scroll</span>
+                    <div class="w-px h-12 bg-gradient-to-b from-white to-transparent"></div>
+                </div>
+            </section>
+
+            <section id="seccion-vision" class="relative w-full py-32 px-4 z-20 border-b border-white/5">
+                <div class="max-w-7xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <!-- Lado Izquierdo: Visión -->
+                        <div>
+                            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
+                                <span class="w-2 h-2 rounded-full bg-brand-cyan shadow-[0_0_10px_#00F0FF] animate-pulse"></span>
+                                <span class="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Nuestra Visión</span>
+                            </div>
+                            <h2 class="text-4xl md:text-5xl font-display font-black text-white leading-[1.1] mb-6">
+                                UN ECOSISTEMA VIVO <br>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-white/70">PARA TRANSFORMAR.</span>
+                            </h2>
+                            <p class="text-lg md:text-xl text-gray-400 font-light leading-relaxed mb-8">
+                                Existimos para ser una casa donde las personas desconectadas encuentran propósito, las familias encuentran restauración y una nueva generación de líderes es levantada para impactar la ciudad.
+                            </p>
+                        </div>
+
+                        <!-- Lado Derecho: Horarios (Glass Cards) -->
+                        <div class="flex flex-col gap-6">
+                            <!-- Horario Domingo -->
+                            <div class="glass-card p-8 rounded-3xl relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-cyan/10 blur-[40px] rounded-full translate-x-1/2 -translate-y-1/2 transition-all duration-700 group-hover:bg-brand-cyan/20"></div>
+                                <h4 class="text-xs font-bold text-brand-cyan tracking-widest uppercase mb-6 flex items-center gap-2">
+                                    <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    Experiencia Domingo
+                                </h4>
+                                <div class="flex flex-wrap gap-3 relative z-10">
+                                    <div class="px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-white font-medium text-sm hover:border-brand-cyan/50 transition-colors cursor-default">8:30 AM</div>
+                                    <div class="px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-white font-medium text-sm hover:border-brand-cyan/50 transition-colors cursor-default">10:30 AM</div>
+                                    <div class="px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-white font-medium text-sm hover:border-brand-cyan/50 transition-colors cursor-default">1:00 PM</div>
+                                    <div class="px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-white font-medium text-sm hover:border-brand-cyan/50 transition-colors cursor-default">7:00 PM</div>
+                                </div>
+                            </div>
+
+                            <!-- Horario Jueves -->
+                            <div class="glass-card p-8 rounded-3xl relative overflow-hidden group">
+                                <div class="absolute bottom-0 right-0 w-48 h-48 bg-brand-purple/10 blur-[40px] rounded-full translate-x-1/2 translate-y-1/2 transition-all duration-700 group-hover:bg-brand-purple/20"></div>
+                                <h4 class="text-xs font-bold text-brand-purple tracking-widest uppercase mb-6 flex items-center gap-2">
+                                    <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    Reunión Mitad de Semana
+                                </h4>
+                                <div class="flex flex-wrap gap-3 relative z-10">
+                                    <div class="px-5 py-3 rounded-xl bg-black/40 border border-white/10 text-white font-medium text-sm hover:border-brand-purple/50 transition-colors cursor-default">JUEVES • 8:00 PM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="seccion-proximo-paso" class="relative w-full py-32 px-4 z-20">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center mb-24">
+                        <h2 class="text-xs text-brand-cyan font-bold tracking-[0.3em] uppercase mb-4">El Motor de Conversión</h2>
+                        <h3 class="text-4xl md:text-6xl font-display font-black text-white">¿QUÉ ESTÁS BUSCANDO?</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        
+                        <!-- Card 1: Comunidad -->
+                        <div onclick="openModal('modal-comunidad')" class="glass-card rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-brand-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <!-- Generative Art -->
+                            <div class="w-24 h-24 mb-8 relative flex justify-center items-center">
+                                <svg viewBox="0 0 100 100" class="w-full h-full absolute">
+                                    <circle cx="50" cy="50" r="40" class="fill-none stroke-white/10 stroke-[1]"></circle>
+                                    <circle cx="50" cy="50" r="40" class="fill-none stroke-brand-cyan stroke-[2] stroke-dasharray-[250] stroke-dashoffset-[250] group-hover:stroke-dashoffset-0 transition-all duration-1000 ease-in-out"></circle>
+                                </svg>
+                                <!-- Nodes -->
+                                <div class="w-3 h-3 rounded-full bg-brand-cyan absolute -translate-x-6 group-hover:translate-x-0 transition-transform duration-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-brand-purple absolute translate-x-6 group-hover:translate-x-0 transition-transform duration-500"></div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-3">Comunidad</h4>
+                            <p class="text-sm text-gray-400 mb-6 flex-grow">Conecta con personas que comparten tus valores. Geolocalizamos tu grupo ideal.</p>
+                            <span class="text-brand-cyan text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-2 transition-transform">Encontrar grupo <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                        </div>
+
+                        <!-- Card 2: Academia -->
+                        <div onclick="openModal('modal-academia')" class="glass-card rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-brand-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <!-- Generative Art -->
+                            <div class="w-24 h-24 mb-8 relative flex justify-center items-center">
+                                <svg viewBox="0 0 100 100" class="w-full h-full absolute">
+                                    <polygon points="50,15 85,80 15,80" class="fill-none stroke-white/10 stroke-[1]"></polygon>
+                                    <polygon points="50,15 85,80 15,80" class="fill-none stroke-brand-purple stroke-[2] stroke-dasharray-[250] stroke-dashoffset-[250] group-hover:stroke-dashoffset-0 transition-all duration-1000 ease-in-out"></polygon>
+                                </svg>
+                                <div class="w-4 h-4 bg-brand-purple rounded-sm rotate-45 group-hover:rotate-180 transition-transform duration-700 shadow-[0_0_15px_#8A2BE2]"></div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-3">Liderazgo</h4>
+                            <p class="text-sm text-gray-400 mb-6 flex-grow">Desarrolla tu potencial a través de nuestra Academia inmersiva de 12 semanas.</p>
+                            <span class="text-brand-purple text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-2 transition-transform">Ver Academia <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                        </div>
+
+                        <!-- Card 3: Ayuda -->
+                        <div onclick="openModal('modal-ayuda')" class="glass-card rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <!-- Generative Art -->
+                            <div class="w-24 h-24 mb-8 relative flex justify-center items-center">
+                                <svg viewBox="0 0 100 100" class="w-full h-full absolute">
+                                    <path d="M50 25 Q80 25 80 50 Q80 75 50 75 Q20 75 20 50 Q20 25 50 25" class="fill-none stroke-white/10 stroke-[1]"></path>
+                                    <path d="M50 25 Q80 25 80 50 Q80 75 50 75 Q20 75 20 50 Q20 25 50 25" class="fill-none stroke-red-500 stroke-[2] stroke-dasharray-[250] stroke-dashoffset-[250] group-hover:stroke-dashoffset-0 transition-all duration-1000 ease-in-out"></path>
+                                </svg>
+                                <div class="w-1 h-8 bg-red-500 rounded-full group-hover:h-4 transition-all duration-300"></div>
+                                <div class="w-8 h-1 bg-red-500 rounded-full absolute group-hover:w-4 transition-all duration-300"></div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-3">Restauración</h4>
+                            <p class="text-sm text-gray-400 mb-6 flex-grow">Matrimonios, ansiedad, duelo. No camines solo, tenemos un equipo listo para ti.</p>
+                            <span class="text-red-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-2 transition-transform">Pedir Apoyo <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                        </div>
+
+                        <!-- Card 4: Voluntariado -->
+                        <div onclick="openModal('modal-comunidad')" class="glass-card rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <!-- Generative Art -->
+                            <div class="w-24 h-24 mb-8 relative flex justify-center items-center">
+                                <svg viewBox="0 0 100 100" class="w-full h-full absolute">
+                                    <rect x="25" y="25" width="50" height="50" rx="10" class="fill-none stroke-white/10 stroke-[1] transform origin-center rotate-45"></rect>
+                                    <rect x="25" y="25" width="50" height="50" rx="10" class="fill-none stroke-yellow-500 stroke-[2] stroke-dasharray-[200] stroke-dashoffset-[200] group-hover:stroke-dashoffset-0 transition-all duration-1000 ease-in-out transform origin-center rotate-45"></rect>
+                                </svg>
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full group-hover:-translate-y-4 transition-transform duration-500 shadow-[0_0_15px_#eab308]"></div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-3">Servir</h4>
+                            <p class="text-sm text-gray-400 mb-6 flex-grow">Usa tus dones y talentos para crear impacto real en la ciudad.</p>
+                            <span class="text-yellow-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:translate-x-2 transition-transform">Ser Voluntario <svg viewBox="0 0 24 24" class="w-4 h-4 rio-path stroke-current stroke-2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="seccion-kids" class="relative w-full py-32 px-4 z-20 border-t border-white/5 overflow-hidden">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <!-- Arte Generativo Kids -->
+                    <div class="relative h-[400px] w-full flex items-center justify-center order-2 lg:order-1">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-80 mix-blend-screen pointer-events-none">
+                            <svg viewBox="0 0 400 400" class="w-full h-full max-w-[500px]">
+                                <defs>
+                                    <filter id="glow-kids"><feGaussianBlur stdDeviation="15" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                    <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00F0FF"/><stop offset="100%" stop-color="#0066FF"/></linearGradient>
+                                    <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8A2BE2"/><stop offset="100%" stop-color="#FF00FF"/></linearGradient>
+                                    <linearGradient id="grad-yellow" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient>
+                                </defs>
+                                <!-- Formas dinámicas animadas por CSS implícito -->
+                                <circle cx="200" cy="200" r="80" fill="url(#grad-cyan)" filter="url(#glow-kids)" style="transform-origin: center; animation: floatKids 6s ease-in-out infinite alternate;"/>
+                                <circle cx="280" cy="150" r="50" fill="url(#grad-purple)" filter="url(#glow-kids)" style="transform-origin: center; animation: floatKids 5s ease-in-out infinite alternate-reverse;"/>
+                                <circle cx="150" cy="260" r="40" fill="url(#grad-yellow)" filter="url(#glow-kids)" style="transform-origin: center; animation: floatKids 7s ease-in-out infinite alternate;"/>
+                                <path d="M 180 120 Q 250 80 300 180" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-dasharray="10 10"/>
+                            </svg>
+                            <style>
+                                @keyframes floatKids {
+                                    0% { transform: translateY(0) scale(1); }
+                                    100% { transform: translateY(-20px) scale(1.05); }
+                                }
+                            </style>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Kids -->
+                    <div class="order-1 lg:order-2 text-center lg:text-left z-10">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-purple/10 border border-brand-purple/20 mb-6">
+                            <span class="text-[10px] font-bold text-brand-purple uppercase tracking-[0.2em]">La Próxima Generación</span>
+                        </div>
+                        <h2 class="text-5xl md:text-7xl font-display font-black text-white mb-6 leading-none">
+                            RÍO <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-white to-brand-purple">KIDS</span>
+                        </h2>
+                        <p class="text-lg md:text-xl text-gray-400 font-light mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Diseñamos entornos interactivos, completamente seguros y llenos de energía. No es una guardería, es la mejor hora de la semana donde tus hijos descubrirán su propósito a su propio nivel.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                            <div class="glass-panel px-6 py-4 rounded-2xl flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-brand-cyan rio-path stroke-current stroke-2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-white font-bold text-sm">Check-in Seguro</p>
+                                    <p class="text-gray-500 text-xs">Sistema de registro digital</p>
+                                </div>
+                            </div>
+                            <div class="glass-panel px-6 py-4 rounded-2xl flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-brand-purple rio-path stroke-current stroke-2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-white font-bold text-sm">6 Meses a 11 Años</p>
+                                    <p class="text-gray-500 text-xs">Aulas por etapa de vida</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Champions Adición -->
+                        <div class="mt-4 flex justify-center lg:justify-start w-full max-w-md mx-auto lg:mx-0">
+                            <div class="glass-panel px-6 py-5 rounded-2xl flex flex-col gap-4 w-full border border-yellow-500/20 hover:border-yellow-500/40 transition-colors relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex items-center gap-4 relative z-10">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" class="w-5 h-5 text-yellow-500 rio-path stroke-current stroke-2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="text-left flex-1">
+                                        <h4 class="text-white font-bold text-sm flex items-center gap-2">RÍO Champions <span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span></h4>
+                                        <p class="text-gray-400 text-xs mt-1">Entorno diseñado para niños con necesidades especiales.</p>
+                                    </div>
+                                </div>
+                                <button onclick="openModal('modal-champions')" class="w-full py-3 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-yellow-500 hover:text-brand-dark transition-all text-center relative z-10">
+                                    Registro Champions
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="seccion-encuentro" class="relative w-full min-h-screen py-32 overflow-hidden flex items-center z-20">
+                <canvas id="souls-canvas" class="absolute inset-0 w-full h-full opacity-60"></canvas>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-dark/50 to-brand-dark"></div>
+                
+                <div class="relative z-10 max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
+                    <div class="glass-panel px-6 py-2 rounded-full border border-white/10 mb-8">
+                        <span class="text-xs font-bold text-gray-300 uppercase tracking-widest">Experiencia Presencial</span>
+                    </div>
+                    
+                    <h2 class="text-[clamp(3rem,8vw,8rem)] font-display font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 leading-none mb-6">
+                        ENCUENTRO
+                    </h2>
+                    
+                    <p class="text-lg md:text-2xl text-gray-400 font-light max-w-2xl mx-auto mb-12">
+                        Tres días diseñados estratégicamente para desconectarte del ruido y reconectar con tu origen.
+                    </p>
+                    
+                    <button onclick="openModal('modal-encuentro')" class="px-10 py-5 bg-white text-brand-dark rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                        Asegurar mi lugar
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+
+    <!-- 1. Modal Comunidad (Registro Inteligente) -->
+    <div id="modal-comunidad" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal('modal-comunidad')"></div>
+        <div class="modal-content glass-panel w-full max-w-md p-8 rounded-3xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-cyan to-brand-purple"></div>
+            
+            <button onclick="closeModal('modal-comunidad')" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 rio-path stroke-current stroke-2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <!-- Form Step -->
+            <div id="comunidad-form">
+                <h3 class="text-2xl font-display font-bold text-white mb-2">Únete a la Familia</h3>
+                <p class="text-sm text-gray-400 mb-8">Ingresa tu código postal para triangular el grupo de vida más cercano a ti.</p>
+                
+                <form onsubmit="handleComunidadSubmit(event)">
+                    <div class="space-y-4">
+                        <input type="text" required placeholder="Tu Nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                        <input type="text" id="cp-input" required placeholder="Código Postal" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                    </div>
+                    <button type="submit" class="w-full mt-8 py-4 bg-brand-cyan text-brand-dark font-bold rounded-xl uppercase tracking-widest hover:bg-white transition-colors">
+                        Buscar mi Grupo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Loading Step -->
+            <div id="comunidad-loading" class="hidden text-center py-12">
+                <!-- Generative Loader -->
+                <div class="w-20 h-20 mx-auto relative mb-6">
+                    <svg viewBox="0 0 100 100" class="w-full h-full animate-[spin_3s_linear_infinite]">
+                        <circle cx="50" cy="50" r="45" class="fill-none stroke-white/10 stroke-[2]"></circle>
+                        <circle cx="50" cy="50" r="45" class="fill-none stroke-brand-cyan stroke-[2] stroke-dasharray-[100_200] stroke-linecap-round"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-brand-purple rounded-full animate-ping"></div>
+                    </div>
+                </div>
+                <h4 class="text-lg font-bold text-white animate-pulse">Triangulando coordenadas...</h4>
+                <p class="text-xs text-brand-cyan mt-2">Buscando anfitriones cercanos</p>
+            </div>
+
+            <!-- Success Step (Match) -->
+            <div id="comunidad-success" class="hidden">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-widest mb-6">
+                    <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div> Match Encontrado
+                </div>
+                
+                <h3 class="text-2xl font-display font-bold text-white mb-1">Grupo Centro Sur</h3>
+                <p class="text-sm text-gray-400 mb-6">A 1.2 km de tu ubicación</p>
+                
+                <div class="bg-black/30 rounded-2xl p-4 border border-white/5 mb-8 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-cyan to-brand-purple flex items-center justify-center text-white font-bold text-sm">
+                        DM
+                    </div>
+                    <div>
+                        <p class="text-xs text-brand-cyan font-bold uppercase tracking-wider">Anfitriones</p>
+                        <p class="text-white font-medium">David y Martha</p>
+                        <p class="text-xs text-gray-400 mt-1">Miércoles • 8:00 PM</p>
+                    </div>
+                </div>
+
+                <a href="#" class="block w-full py-4 text-center bg-green-600 text-white font-bold rounded-xl uppercase tracking-widest hover:bg-green-500 transition-colors">
+                    Enviar WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Modal Ayuda (Restauración) -->
+    <div id="modal-ayuda" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal('modal-ayuda')"></div>
+        <div class="modal-content glass-panel w-full max-w-md p-8 rounded-3xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+            <button onclick="closeModal('modal-ayuda')" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 rio-path stroke-current stroke-2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <div id="ayuda-form">
+                <h3 class="text-2xl font-display font-bold text-white mb-2">No tienes que caminar solo.</h3>
+                <p class="text-sm text-gray-400 mb-6">Cuéntanos qué sucede. Un líder pastoral se comunicará contigo de forma confidencial.</p>
+                
+                <form onsubmit="handleAyudaSubmit(event)">
+                    <div class="space-y-4">
+                        <input type="text" required placeholder="Tu Nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors">
+                        <input type="tel" required placeholder="Tu Teléfono (WhatsApp)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors">
+                        <select required class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-red-500 transition-colors appearance-none">
+                            <option value="" disabled selected>¿En qué área necesitas apoyo?</option>
+                            <option value="matrimonio">Restauración Matrimonial</option>
+                            <option value="ansiedad">Ansiedad / Depresión</option>
+                            <option value="duelo">Pérdida / Duelo</option>
+                            <option value="oracion">Petición de Oración General</option>
+                        </select>
+                        <textarea required placeholder="Cuéntanos brevemente (Confidencial)" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full mt-6 py-4 bg-red-500 text-white font-bold rounded-xl uppercase tracking-widest hover:bg-red-400 transition-colors">
+                        Solicitar Apoyo
+                    </button>
+                </form>
+            </div>
+
+            <div id="ayuda-loading" class="hidden text-center py-12">
+                <div class="w-12 h-12 border-4 border-red-500/20 border-t-red-500 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-white font-medium">Asignando un líder pastoral...</p>
+            </div>
+
+            <div id="ayuda-success" class="hidden text-center py-8">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 text-red-500 rio-path stroke-current stroke-2"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Petición Recibida</h3>
+                <p class="text-gray-400 text-sm">Tu solicitud es confidencial. Un líder se pondrá en contacto contigo en las próximas 24 horas vía WhatsApp.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Modal Academia (MasterClass style) -->
+    <div id="modal-academia" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal('modal-academia')"></div>
+        <div class="modal-content glass-panel w-full max-w-lg p-8 rounded-3xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-brand-purple"></div>
+            <button onclick="closeModal('modal-academia')" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors z-10">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 rio-path stroke-current stroke-2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <div id="academia-form">
+                <div class="mb-8">
+                    <span class="text-xs font-bold text-brand-purple uppercase tracking-widest bg-brand-purple/10 px-3 py-1 rounded-full border border-brand-purple/20">Programa de Liderazgo</span>
+                    <h3 class="text-3xl font-display font-black text-white mt-4 mb-2">Academia RÍO</h3>
+                    <p class="text-sm text-gray-400">Aplica para la próxima generación. Un programa inmersivo de 12 semanas para desarrollar tu potencial.</p>
+                </div>
+                
+                <form onsubmit="handleAcademiaSubmit(event)">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" required placeholder="Nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors">
+                            <input type="text" required placeholder="Apellido" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors">
+                        </div>
+                        <input type="email" required placeholder="Correo Electrónico" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors">
+                        <textarea required placeholder="¿Por qué quieres unirte a la Academia?" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-purple transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full mt-8 py-4 bg-white text-brand-dark font-bold rounded-xl uppercase tracking-widest hover:bg-brand-purple hover:text-white transition-colors">
+                        Enviar Aplicación
+                    </button>
+                </form>
+            </div>
+
+            <div id="academia-loading" class="hidden text-center py-16">
+                <div class="w-12 h-12 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-white font-medium">Procesando aplicación...</p>
+            </div>
+
+            <div id="academia-success" class="hidden text-center py-12">
+                <div class="w-20 h-20 mx-auto relative mb-6">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <circle cx="50" cy="50" r="45" class="fill-none stroke-brand-purple/20 stroke-[4]"></circle>
+                        <path d="M30 50 L45 65 L70 35" class="fill-none stroke-brand-purple stroke-[4] stroke-linecap-round stroke-linejoin-round" stroke-dasharray="100" stroke-dashoffset="100">
+                            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="0.8s" fill="freeze" />
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Aplicación Recibida</h3>
+                <p class="text-gray-400 text-sm mb-6">Hemos enviado los detalles del programa y próximos pasos a tu correo electrónico.</p>
+                <button onclick="closeModal('modal-academia')" class="text-xs text-brand-purple font-bold uppercase tracking-widest hover:text-white transition-colors">Volver al sitio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Modal Encuentro -->
+    <div id="modal-encuentro" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal('modal-encuentro')"></div>
+        <div class="modal-content glass-panel w-full max-w-sm p-8 rounded-3xl relative text-center">
+            <h3 class="text-2xl font-display font-black text-white mb-2">ENCUENTRO</h3>
+            <p class="text-gray-400 mb-8">El registro para la próxima fecha se abrirá pronto. Únete a la lista de espera prioritaria.</p>
+            <input type="email" placeholder="Tu correo electrónico" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white mb-4 text-center">
+            <button onclick="closeModal('modal-encuentro')" class="w-full py-4 bg-white text-brand-dark font-bold rounded-xl uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                Notificarme
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. Modal Champions -->
+    <div id="modal-champions" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal('modal-champions')"></div>
+        <div class="modal-content glass-panel w-full max-w-md p-8 rounded-3xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
+            <button onclick="closeModal('modal-champions')" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 rio-path stroke-current stroke-2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            <div id="champions-form">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 mb-4">
+                    <span class="text-[10px] font-bold text-yellow-500 uppercase tracking-[0.2em]">Inclusión</span>
+                </div>
+                <h3 class="text-2xl font-display font-bold text-white mb-2">Registro Champions</h3>
+                <p class="text-sm text-gray-400 mb-6">Preparamos un equipo de voluntarios y un espacio seguro para tu hijo.</p>
+                
+                <form onsubmit="handleChampionsSubmit(event)">
+                    <div class="space-y-4">
+                        <input type="text" id="champ-padre" required placeholder="Nombre del Padre o Tutor" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                        <input type="text" id="champ-hijo" required placeholder="Nombre del Niño(a)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                        <select id="champ-horario" required class="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-yellow-500 transition-colors appearance-none">
+                            <option value="" disabled selected>¿A qué servicio asistirán?</option>
+                            <option value="Domingo a las 8:30 AM">Domingo • 8:30 AM</option>
+                            <option value="Domingo a las 10:30 AM">Domingo • 10:30 AM</option>
+                            <option value="Domingo a la 1:00 PM">Domingo • 1:00 PM</option>
+                            <option value="Domingo a las 7:00 PM">Domingo • 7:00 PM</option>
+                            <option value="Jueves a las 8:00 PM">Jueves • 8:00 PM</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full mt-6 py-4 bg-yellow-500 text-brand-dark font-bold rounded-xl uppercase tracking-widest hover:bg-yellow-400 transition-colors shadow-[0_0_20px_rgba(234,179,8,0.2)]">
+                        Completar Registro
+                    </button>
+                </form>
+            </div>
+
+            <div id="champions-loading" class="hidden text-center py-12">
+                <div class="w-12 h-12 border-4 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-white font-medium">Preparando el espacio...</p>
+            </div>
+
+            <div id="champions-success" class="hidden text-center py-8">
+                <div class="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-500/30">
+                    <svg viewBox="0 0 24 24" class="w-8 h-8 text-yellow-500 rio-path stroke-current stroke-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">¡Registro Exitoso!</h3>
+                <p class="text-gray-400 text-sm mb-6" id="champ-success-msg">Mensaje generado dinámicamente</p>
+                <button onclick="closeModal('modal-champions')" class="text-xs text-yellow-500 font-bold uppercase tracking-widest hover:text-white transition-colors">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Base Setup (Lenis & ScrollTrigger) ---
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+        
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- 2. Animations On Load ---
+        window.addEventListener('load', () => {
+            gsap.to('.gsap-hero', { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: 'power4.out', delay: 0.2 });
+            
+            // Navbar Hide/Show on Scroll
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('main-nav');
+                const currentScroll = window.pageYOffset;
+                if (currentScroll > 100 && currentScroll > lastScroll) {
+                    nav.style.transform = 'translate(-50%, -150%)'; // Hide up
+                } else {
+                    nav.style.transform = 'translate(-50%, 0)'; // Show
+                }
+                lastScroll = currentScroll;
+            });
+        });
+
+        // --- 3. Modal System ---
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('active');
+                lenis.stop(); // Prevent scrolling background
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.remove('active');
+                lenis.start(); // Restore scrolling
+                
+                // Reset forms after a delay if closed
+                setTimeout(() => resetForms(id), 500);
+            }
+        }
+
+        // --- 4. Form Handlers (Simulating Backend) ---
+        function handleComunidadSubmit(e) {
+            e.preventDefault();
+            document.getElementById('comunidad-form').classList.add('hidden');
+            document.getElementById('comunidad-loading').classList.remove('hidden');
+            
+            // Simulate API Call/Triangulation
+            setTimeout(() => {
+                document.getElementById('comunidad-loading').classList.add('hidden');
+                document.getElementById('comunidad-success').classList.remove('hidden');
+            }, 2500);
+        }
+
+        function handleAyudaSubmit(e) {
+            e.preventDefault();
+            document.getElementById('ayuda-form').classList.add('hidden');
+            document.getElementById('ayuda-loading').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('ayuda-loading').classList.add('hidden');
+                document.getElementById('ayuda-success').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function handleAcademiaSubmit(e) {
+            e.preventDefault();
+            document.getElementById('academia-form').classList.add('hidden');
+            document.getElementById('academia-loading').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('academia-loading').classList.add('hidden');
+                document.getElementById('academia-success').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function handleChampionsSubmit(e) {
+            e.preventDefault();
+            const horario = document.getElementById('champ-horario').value;
+            const padre = document.getElementById('champ-padre').value;
+            
+            document.getElementById('champions-form').classList.add('hidden');
+            document.getElementById('champions-loading').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('champions-loading').classList.add('hidden');
+                
+                // Mensaje dinámico con el horario
+                document.getElementById('champ-success-msg').innerHTML = 
+                    `Listo <strong>${padre}</strong>, nuestro equipo de voluntarios estará esperándolos.<br><br>
+                     <span class="text-white font-bold block mt-2 text-base">¡Nos vemos el ${horario}!</span>`;
+                     
+                document.getElementById('champions-success').classList.remove('hidden');
+            }, 1500);
+        }
+
+        function resetForms(modalId) {
+            // Reset to initial states depending on the modal
+            if(modalId === 'modal-comunidad') {
+                document.getElementById('comunidad-form').classList.remove('hidden');
+                document.getElementById('comunidad-loading').classList.add('hidden');
+                document.getElementById('comunidad-success').classList.add('hidden');
+                document.querySelector('#comunidad-form form').reset();
+            }
+            if(modalId === 'modal-ayuda') {
+                document.getElementById('ayuda-form').classList.remove('hidden');
+                document.getElementById('ayuda-loading').classList.add('hidden');
+                document.getElementById('ayuda-success').classList.add('hidden');
+                document.querySelector('#ayuda-form form').reset();
+            }
+            if(modalId === 'modal-academia') {
+                document.getElementById('academia-form').classList.remove('hidden');
+                document.getElementById('academia-loading').classList.add('hidden');
+                document.getElementById('academia-success').classList.add('hidden');
+                document.querySelector('#academia-form form').reset();
+            }
+            if(modalId === 'modal-champions') {
+                document.getElementById('champions-form').classList.remove('hidden');
+                document.getElementById('champions-loading').classList.add('hidden');
+                document.getElementById('champions-success').classList.add('hidden');
+                document.querySelector('#champions-form form').reset();
+            }
+        }
+
+        // --- 5. Mouse Interaction (Glow & Spotlight) ---
+        const initMouseEffects = () => {
+            const cursorGlow = document.getElementById('cursor-glow');
+            const spotlightText = document.getElementById('spotlight-text');
+
+            window.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = `${e.clientX}px`;
+                cursorGlow.style.top = `${e.clientY}px`;
+
+                if (spotlightText) {
+                    const rect = spotlightText.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    spotlightText.style.setProperty('--x', `${x}px`);
+                    spotlightText.style.setProperty('--y', `${y}px`);
+                }
+            });
+
+            if(spotlightText) {
+                spotlightText.addEventListener('mouseleave', () => {
+                    spotlightText.style.setProperty('--x', `-100%`);
+                    spotlightText.style.setProperty('--y', `-100%`);
+                });
+            }
+        };
+
+        // --- 6. ThreeJS Hero Particles ---
+        let threeCamera, threeScene, threeRenderer, threeParticles;
+        let mouseX = 0, mouseY = 0;
+
+        const initThreeJS = () => {
+            const canvas = document.getElementById('webgl-canvas');
+            if(!canvas) return;
+            threeRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            
+            threeScene = new THREE.Scene();
+            threeCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+            threeCamera.position.z = 120;
+
+            const particleCount = window.innerWidth < 768 ? 2000 : 6000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 300; // x
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 300; // y
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 200; // z
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({
+                size: 0.8,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.4,
+                blending: THREE.AdditiveBlending
+            });
+
+            threeParticles = new THREE.Points(geometry, material);
+            threeScene.add(threeParticles);
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX - window.innerWidth / 2) * 0.05;
+                mouseY = (e.clientY - window.innerHeight / 2) * 0.05;
+            });
+
+            const animateThree = () => {
+                requestAnimationFrame(animateThree);
+                const time = Date.now() * 0.0002;
+                const pos = threeParticles.geometry.attributes.position.array;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const x = pos[i * 3];
+                    const z = pos[i * 3 + 2];
+                    // Gentle wave motion
+                    pos[i * 3 + 1] += Math.sin(time + x * 0.05) * 0.02;
+                }
+                
+                threeParticles.geometry.attributes.position.needsUpdate = true;
+                
+                // Camera follows mouse smoothly
+                threeCamera.position.x += (mouseX - threeCamera.position.x) * 0.02;
+                threeCamera.position.y += (-mouseY - threeCamera.position.y) * 0.02;
+                threeCamera.lookAt(threeScene.position);
+
+                threeRenderer.render(threeScene, threeCamera);
+            };
+
+            animateThree();
+
+            window.addEventListener('resize', () => {
+                threeCamera.aspect = window.innerWidth / window.innerHeight;
+                threeCamera.updateProjectionMatrix();
+                threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // --- 7. Canvas Souls Animation (Encuentro Section) ---
+        const initSoulsCanvas = () => {
+            const canvas = document.getElementById('souls-canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = canvas.offsetWidth;
+            let h = canvas.height = canvas.offsetHeight;
+            const souls = [];
+
+            class Soul {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.radius = Math.random() * (w/2) + 50;
+                    this.speed = (Math.random() * 0.002) + 0.001;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.yOffset = (Math.random() - 0.5) * h;
+                }
+                update() {
+                    this.angle -= this.speed; // Orbit
+                    this.radius -= 0.5; // Pull to center
+                    if(this.radius < 10) this.reset();
+                }
+                draw() {
+                    const x = (w/2) + Math.cos(this.angle) * this.radius;
+                    const y = (h/2) + Math.sin(this.angle) * (this.radius * 0.3) + this.yOffset * (this.radius/w); // 3D perspective orbit
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, this.size, 0, Math.PI * 2);
+                    const opacity = Math.min(1, this.radius / 100);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.5})`;
+                    ctx.fill();
+                }
+            }
+
+            for(let i=0; i<150; i++) souls.push(new Soul());
+
+            const animateSouls = () => {
+                ctx.clearRect(0, 0, w, h);
+                
+                // Draw Center Light
+                const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, 150);
+                gradient.addColorStop(0, 'rgba(255,255,255,0.1)');
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0,0,w,h);
+
+                souls.forEach(s => { s.update(); s.draw(); });
+                requestAnimationFrame(animateSouls);
+            };
+            animateSouls();
+
+            window.addEventListener('resize', () => {
+                w = canvas.width = canvas.offsetWidth;
+                h = canvas.height = canvas.offsetHeight;
+            });
+        };
+
+        // --- Init ---
+        initMouseEffects();
+        initThreeJS();
+        initSoulsCanvas();
+    </script>
+</body>
+</html>
