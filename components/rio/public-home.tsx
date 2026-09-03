@@ -233,14 +233,14 @@ export function PublicHome({
             <div className="image-frame ml-auto aspect-[4/3] w-[88%] overflow-hidden rounded-[2rem]">
               <img
                 src="/prayer.webp"
-                alt="Momento de oración y adoración"
+                alt="Jóvenes en un momento de worship contemporáneo"
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="absolute -bottom-8 left-0 aspect-square w-[38%] overflow-hidden rounded-[1.5rem] border-[10px] border-rio-paper">
               <img
                 src="/community.webp"
-                alt="Amigos reunidos en comunidad"
+                alt="Amigos jóvenes compartiendo en comunidad"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -404,7 +404,7 @@ export function PublicHome({
           <div className="relative min-h-[380px]">
             <img
               src="/family.webp"
-              alt="Familia reunida en la iglesia"
+              alt="Familias y amigos reunidos al atardecer"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="image-veil absolute inset-0" />
