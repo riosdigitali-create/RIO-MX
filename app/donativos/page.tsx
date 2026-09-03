@@ -1,0 +1,3 @@
+import { DonationForm } from '@/components/rio/public-home';
+import { PageHero, SiteFooter } from '@/components/rio/site-chrome';
+export default function Donativos(){return <main><PageHero eyebrow="Generosidad" title="DAR TAMBIÉN ES ADORAR." image="/mexico-friends.jpg"><p>Tu generosidad sostiene la casa, ayuda a personas y lleva el mensaje más lejos. “Dios ama al que da con alegría.”</p></PageHero><section className="section-space bg-rio-navy text-white"><div className="site-wrap grid gap-8 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow text-rio-mint">Elige tu forma de dar</p><h2 className="mt-5 text-4xl font-semibold">Diezmo · Ofrenda · Misiones</h2></div><DonationForm/></div></section><SiteFooter/></main>}

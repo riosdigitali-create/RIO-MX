@@ -86,13 +86,13 @@ export function PublicHome({
             RÍO MX
           </a>
           <div className="hidden items-center gap-8 text-[11px] font-bold uppercase tracking-[.18em] md:flex">
-            <a href="#encuentros" className="nav-item">
+            <a href="/encuentros" className="nav-item">
               Encuentros
             </a>
-            <a href="#grupos" className="nav-item">
+            <a href="/grupos" className="nav-item">
               Grupos nuevos
             </a>
-            <a href="#dar" className="nav-item">
+            <a href="/donativos" className="nav-item">
               Dar
             </a>
             <a
@@ -117,9 +117,10 @@ export function PublicHome({
           <div className="site-wrap absolute inset-x-0 top-24 z-20 rounded-3xl border border-white/15 bg-rio-navy/95 p-7 shadow-2xl backdrop-blur-xl md:hidden">
             <div className="grid gap-5 text-lg font-semibold">
               {[
-                ['Encuentros', '#encuentros'],
-                ['Grupos nuevos', '#grupos'],
-                ['Donativos', '#dar'],
+                ['Encuentros', '/encuentros'],
+                ['Grupos nuevos', '/grupos'],
+                ['Academia', '/academia'],
+                ['Donativos', '/donativos'],
                 ['Panel interno', '/panel'],
               ].map(([label, href]) => (
                 <a
@@ -155,12 +156,7 @@ export function PublicHome({
               propósito en Ciudad de México.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                className="h-12 rounded-full bg-rio-mint px-6 text-rio-navy hover:bg-white"
-                onClick={() => setCheckout('attendee')}
-              >
-                Apartar mi lugar <ArrowRight />
-              </Button>
+              <a href="/encuentros" className="inline-flex h-12 items-center gap-2 rounded-full bg-rio-mint px-6 text-sm font-semibold text-rio-navy transition hover:bg-white">Ver encuentros <ArrowRight /></a>
               <a
                 href="#anuncios"
                 className="inline-flex h-12 items-center gap-2 rounded-full border border-white/30 px-6 text-sm font-semibold transition hover:bg-white/10"
@@ -232,15 +228,15 @@ export function PublicHome({
           <div className="relative lg:col-span-7">
             <div className="image-frame ml-auto aspect-[4/3] w-[88%] overflow-hidden rounded-[2rem]">
               <img
-                src="/prayer.webp?v=2"
-                alt="Jóvenes en un momento de worship contemporáneo"
+                src="/mexico-students.jpg"
+                alt="Jóvenes mexicanos compartiendo en comunidad"
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="absolute -bottom-8 left-0 aspect-square w-[38%] overflow-hidden rounded-[1.5rem] border-[10px] border-rio-paper">
               <img
-                src="/community.webp?v=2"
-                alt="Amigos jóvenes compartiendo en comunidad"
+                src="/mexico-friends.jpg"
+                alt="Amigas mexicanas compartiendo juntas"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -268,6 +264,20 @@ export function PublicHome({
                 index={index}
               />
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-space bg-rio-navy text-white">
+        <div className="site-wrap grid items-center gap-8 overflow-hidden rounded-[2rem] border border-white/15 bg-white/[.05] p-6 sm:p-10 lg:grid-cols-[360px_1fr]">
+          <div className="aspect-square overflow-hidden rounded-[1.5rem] bg-black">
+            <video src="/hero-worship.mp4" autoPlay muted loop playsInline className="h-full w-full object-cover" />
+          </div>
+          <div className="lg:pl-8">
+            <p className="eyebrow text-rio-gold">México + Estados Unidos</p>
+            <h2 className="mt-4 font-display text-6xl leading-none sm:text-8xl">MAKERS</h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/65">Una generación que crea, sirve y abre camino. Muy pronto compartiremos fechas y registro.</p>
+            <a href="https://chic-nail-studio-mx.riosdigitali.workers.dev/" target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full border border-white/20 px-5 py-3 text-xs font-bold uppercase tracking-[.16em] text-white transition hover:bg-white hover:text-rio-navy">Ver demo</a>
           </div>
         </div>
       </section>
@@ -505,7 +515,7 @@ function AnnouncementCard({
           {announcement.body}
         </p>
         <a
-          href={announcement.cta_url}
+          href={announcement.cta_url === '#encuentros' ? '/encuentros' : announcement.cta_url === '#grupos' ? '/grupos' : announcement.cta_url === '#recursos' ? '/ministerios' : announcement.cta_url}
           className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-rio-navy"
         >
           {announcement.cta_label} <ArrowRight className="size-4" />
@@ -558,7 +568,7 @@ function PriceCard({
   );
 }
 
-function CheckoutDialog({
+export function CheckoutDialog({
   event,
   kind,
   onClose,
@@ -655,7 +665,7 @@ function CheckoutDialog({
   );
 }
 
-function GroupDialog({
+export function GroupDialog({
   open,
   onClose,
 }: {
@@ -754,7 +764,7 @@ function GroupDialog({
   );
 }
 
-function DonationForm() {
+export function DonationForm() {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
