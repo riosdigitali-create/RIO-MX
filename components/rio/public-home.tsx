@@ -277,7 +277,7 @@ export function PublicHome({
             <p className="eyebrow text-rio-gold">México + Estados Unidos</p>
             <h2 className="mt-4 font-display text-6xl leading-none sm:text-8xl">MAKERS</h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/65">Una generación que crea, sirve y abre camino. Muy pronto compartiremos fechas y registro.</p>
-            <a href="https://chic-nail-studio-mx.riosdigitali.workers.dev/" target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full border border-white/20 px-5 py-3 text-xs font-bold uppercase tracking-[.16em] text-white transition hover:bg-white hover:text-rio-navy">Ver demo</a>
+            <span className="mt-8 inline-flex rounded-full border border-white/20 px-5 py-3 text-xs font-bold uppercase tracking-[.16em] text-white/55">Próximamente</span>
           </div>
         </div>
       </section>
