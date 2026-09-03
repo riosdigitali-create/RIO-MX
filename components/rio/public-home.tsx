@@ -232,14 +232,14 @@ export function PublicHome({
           <div className="relative lg:col-span-7">
             <div className="image-frame ml-auto aspect-[4/3] w-[88%] overflow-hidden rounded-[2rem]">
               <img
-                src="/prayer.webp"
+                src="/prayer.webp?v=2"
                 alt="Jóvenes en un momento de worship contemporáneo"
                 className="h-full w-full object-cover"
               />
             </div>
             <div className="absolute -bottom-8 left-0 aspect-square w-[38%] overflow-hidden rounded-[1.5rem] border-[10px] border-rio-paper">
               <img
-                src="/community.webp"
+                src="/community.webp?v=2"
                 alt="Amigos jóvenes compartiendo en comunidad"
                 className="h-full w-full object-cover"
               />
@@ -338,7 +338,7 @@ export function PublicHome({
         <div className="site-wrap grid gap-10 lg:grid-cols-2 lg:items-center">
           <div className="aspect-[5/4] overflow-hidden rounded-[2rem]">
             <img
-              src="/groups.webp"
+              src="/groups.webp?v=2"
               alt="Grupo de amigos conversando y creciendo juntos"
               className="h-full w-full object-cover"
             />
@@ -403,7 +403,7 @@ export function PublicHome({
         <div className="site-wrap grid overflow-hidden rounded-[2.25rem] bg-rio-navy text-white lg:grid-cols-2">
           <div className="relative min-h-[380px]">
             <img
-              src="/family.webp"
+              src="/family.webp?v=2"
               alt="Familias y amigos reunidos al atardecer"
               className="absolute inset-0 h-full w-full object-cover"
             />
