@@ -2,20 +2,14 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import {
-  ArrowDownRight,
   ArrowRight,
   CalendarDays,
   Check,
-  ChevronRight,
   Heart,
   LockKeyhole,
   MapPin,
-  Menu,
   Play,
-  ShieldCheck,
   Sparkles,
-  Users,
-  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +22,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import type { Announcement, RioEvent } from '@/lib/rio-db';
+import { SiteFooter, SiteHeader } from '@/components/rio/site-chrome';
 
 type CheckoutKind = 'attendee' | 'server';
 
@@ -39,9 +34,6 @@ export function PublicHome({
   events: RioEvent[];
 }) {
   const [announcements, setAnnouncements] = useState(initialAnnouncements);
-  const [checkout, setCheckout] = useState<CheckoutKind | null>(null);
-  const [groupOpen, setGroupOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const event = events[0];
 
   useEffect(() => {
@@ -77,69 +69,13 @@ export function PublicHome({
         </video>
         <div className="hero-wash absolute inset-0 -z-20" />
         <div className="grain absolute inset-0 -z-10 opacity-25" />
-
-        <nav
-          className="site-wrap flex h-24 items-center justify-between"
-          aria-label="Navegación principal"
-        >
-          <a href="#inicio" className="font-display text-3xl tracking-[.08em]">
-            RÍO MX
-          </a>
-          <div className="hidden items-center gap-8 text-[11px] font-bold uppercase tracking-[.18em] md:flex">
-            <a href="/encuentros" className="nav-item">
-              Encuentros
-            </a>
-            <a href="/grupos" className="nav-item">
-              Grupos nuevos
-            </a>
-            <a href="/donativos" className="nav-item">
-              Dar
-            </a>
-            <a
-              href="/panel"
-              className="rounded-full border border-white/30 px-5 py-3 transition hover:bg-white hover:text-rio-navy"
-            >
-              Panel
-            </a>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon-lg"
-            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            className="text-white hover:bg-white/10 hover:text-white md:hidden"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </Button>
-        </nav>
-
-        {menuOpen && (
-          <div className="site-wrap absolute inset-x-0 top-24 z-20 rounded-3xl border border-white/15 bg-rio-navy/95 p-7 shadow-2xl backdrop-blur-xl md:hidden">
-            <div className="grid gap-5 text-lg font-semibold">
-              {[
-                ['Encuentros', '/encuentros'],
-                ['Grupos nuevos', '/grupos'],
-                ['Academia', '/academia'],
-                ['Donativos', '/donativos'],
-                ['Panel interno', '/panel'],
-              ].map(([label, href]) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-between border-b border-white/10 pb-4"
-                >
-                  {label}
-                  <ChevronRight className="size-4" />
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="absolute inset-x-0 top-0 z-30">
+          <SiteHeader dark />
+        </div>
 
         <div
           id="inicio"
-          className="site-wrap grid flex-1 items-end gap-10 pb-12 pt-16 lg:grid-cols-[1fr_360px] lg:pb-16"
+          className="site-wrap grid flex-1 items-end gap-10 pb-12 pt-36 lg:grid-cols-[1fr_360px] lg:pb-16"
         >
           <div className="max-w-4xl">
             <p className="mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-[.22em] text-rio-mint">
@@ -156,7 +92,7 @@ export function PublicHome({
               propósito en Ciudad de México.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="/encuentros" className="inline-flex h-12 items-center gap-2 rounded-full bg-rio-mint px-6 text-sm font-semibold text-rio-navy transition hover:bg-white">Ver encuentros <ArrowRight /></a>
+              <a href="/grupos" className="inline-flex h-12 items-center gap-2 rounded-full bg-rio-mint px-6 text-sm font-semibold text-rio-navy transition hover:bg-white">Soy nuevo aquí <ArrowRight /></a>
               <a
                 href="#anuncios"
                 className="inline-flex h-12 items-center gap-2 rounded-full border border-white/30 px-6 text-sm font-semibold transition hover:bg-white/10"
@@ -167,9 +103,8 @@ export function PublicHome({
           </div>
 
           {event && (
-            <button
-              type="button"
-              onClick={() => setCheckout('attendee')}
+            <a
+              href="/encuentros"
               className="event-peek group mb-2 block w-full rounded-[1.75rem] border border-white/20 bg-white/10 p-5 text-left backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/15"
             >
               <p className="text-[10px] font-bold uppercase tracking-[.2em] text-rio-gold">
@@ -188,10 +123,10 @@ export function PublicHome({
                 </p>
               </div>
               <span className="mt-6 flex items-center justify-between border-t border-white/15 pt-4 text-sm font-semibold">
-                Ver boletos{' '}
+                Conocer Encuentros{' '}
                 <ArrowRight className="size-4 transition group-hover:translate-x-1" />
               </span>
-            </button>
+            </a>
           )}
         </div>
         <div className="site-wrap flex flex-col justify-between gap-2 border-t border-white/15 py-5 text-[10px] font-semibold uppercase tracking-[.14em] text-white/55 sm:flex-row">
@@ -282,196 +217,93 @@ export function PublicHome({
         </div>
       </section>
 
-      <section
-        id="encuentros"
-        className="section-space relative overflow-hidden bg-rio-navy text-white"
-      >
-        <div className="grain absolute inset-0 opacity-15" />
-        <div className="site-wrap relative grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
-          <div className="lg:sticky lg:top-10">
-            <p className="eyebrow text-rio-mint">Encuentro RÍO</p>
-            <h2 className="display-section mt-5">
-              DOS DÍAS.
-              <br />
-              UNA HISTORIA NUEVA.
-            </h2>
-            <p className="mt-7 max-w-lg text-lg leading-8 text-white/68">
-              Al confirmar el pago, cada persona recibe su boleto individual con
-              un QR único. En la entrada se valida una sola vez y se entrega la
-              pulsera.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[.12em] text-white/60">
-              <span className="rounded-full border border-white/15 px-4 py-2">
-                26–27 septiembre
-              </span>
-              <span className="rounded-full border border-white/15 px-4 py-2">
-                CDMX
-              </span>
-            </div>
+      <section className="section-space bg-rio-paper">
+        <div className="site-wrap grid overflow-hidden rounded-[2.25rem] bg-white shadow-[0_30px_90px_rgba(25,34,81,.10)] lg:grid-cols-[.85fr_1.15fr]">
+          <div className="aspect-square min-h-[360px] bg-rio-navy lg:min-h-[560px]">
+            <video src="/biblia-nosotras.mp4" autoPlay muted loop playsInline className="h-full w-full object-cover" />
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <PriceCard
-              label="Encuentrista"
-              price={1600}
-              accent="mint"
-              description="Para quien vivirá su Encuentro por primera vez."
-              onClick={() => setCheckout('attendee')}
-            />
-            <PriceCard
-              label="Servidor"
-              price={1300}
-              accent="gold"
-              description="Para el equipo que sirve y acompaña durante el Encuentro."
-              onClick={() => setCheckout('server')}
-            />
-            <div className="sm:col-span-2 rounded-[1.5rem] border border-white/15 bg-white/[.06] p-5">
-              <div className="grid gap-4 text-sm text-white/70 sm:grid-cols-3">
-                <span className="flex items-center gap-2">
-                  <LockKeyhole className="size-4 text-rio-mint" /> Pago con
-                  Stripe
-                </span>
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="size-4 text-rio-mint" /> QR de un solo
-                  uso
-                </span>
-                <span className="flex items-center gap-2">
-                  <Users className="size-4 text-rio-mint" /> Una pulsera por
-                  boleto
-                </span>
-              </div>
+          <div className="flex flex-col justify-center p-8 sm:p-12 lg:p-16">
+            <img src="/logobiblia.png" alt="La Biblia y Nosotras" className="h-auto w-44" />
+            <p className="eyebrow mt-10 text-rio-coral">15 de agosto de 2026 · Arena CDMX</p>
+            <h2 className="mt-5 text-4xl font-semibold tracking-[-.04em] sm:text-6xl">Una noche para volver a la Palabra.</h2>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">Una experiencia para mujeres que quieren encontrarse con Dios, fortalecer su fe y caminar acompañadas.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="https://www.superboletos.com/landing-evento/4lstBqD-3YdArDsuzo1SUQ" target="_blank" rel="noreferrer" className="inline-flex h-12 items-center gap-2 rounded-full bg-rio-navy px-6 text-sm font-semibold text-white">Comprar boletos <ArrowRight className="size-4" /></a>
+              <a href="https://labibliaynosotras.com" target="_blank" rel="noreferrer" className="inline-flex h-12 items-center rounded-full border border-rio-navy/15 px-6 text-sm font-semibold">Ver sitio oficial</a>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="grupos" className="section-space bg-rio-mint/20">
-        <div className="site-wrap grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div className="aspect-[5/4] overflow-hidden rounded-[2rem]">
-            <img
-              src="/groups.webp?v=2"
-              alt="Grupo de amigos conversando y creciendo juntos"
-              className="h-full w-full object-cover"
-            />
+      <section className="section-space bg-white">
+        <div className="site-wrap">
+          <p className="eyebrow text-rio-coral">Todo RÍO, bien organizado</p>
+          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <h2 className="display-section max-w-4xl">ENCUENTRA TU SIGUIENTE PASO.</h2>
+            <p className="max-w-sm text-sm leading-6 text-slate-500">Cada área tiene su propia página para que la información sea fácil de encontrar.</p>
           </div>
-          <div className="lg:pl-8">
-            <p className="eyebrow text-rio-coral">Solo grupos nuevos</p>
-            <h2 className="display-section mt-5">
-              ABRE TU CASA.
-              <br />
-              HAZ FAMILIA.
-            </h2>
-            <p className="mt-7 max-w-lg text-lg leading-8 text-slate-600">
-              El registro público queda únicamente para propuestas de grupos
-              nuevos. Cada solicitud llega al CRM y debe ser aceptada por
-              alguien del equipo antes de publicarse.
-            </p>
-            <Button
-              className="mt-8 h-12 rounded-full px-6"
-              onClick={() => setGroupOpen(true)}
-            >
-              Registrar un grupo nuevo <ArrowRight />
-            </Button>
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              ['El Río', 'Conoce nuestra visión y la ruta: ganar, consolidar, discipular y enviar.', '/el-rio', '/comunidad-grupos.png'],
+              ['Grupos', 'Haz familia, crece en la fe o solicita abrir un grupo nuevo.', '/grupos', '/mexico-students.jpg'],
+              ['Encuentros', 'Consulta categorías, precios y recibe tu boleto individual con QR.', '/encuentros', '/Encuentro.png'],
+              ['Academia', 'Fórmate como líder y prepárate para acompañar a otros.', '/academia', '/liderazgo-academia.png'],
+              ['Ministerios', 'RÍO Kids, Jóvenes, Champions, matrimonios, Prime y restauración.', '/ministerios', '/mexico-friends.jpg'],
+              ['Sedes', 'Encuentra horarios y ubicación de las 12 casas RÍO.', '/sedes', '/mexico-family.jpg'],
+            ].map(([title, body, href, image]) => (
+              <a href={href} key={href} className="group overflow-hidden rounded-[1.75rem] border border-rio-navy/10 bg-rio-paper transition hover:-translate-y-1 hover:shadow-xl">
+                <img src={image} alt="" className="aspect-[16/9] w-full object-cover" />
+                <div className="p-7">
+                  <h3 className="text-2xl font-semibold">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{body}</p>
+                  <span className="mt-7 flex items-center gap-2 text-sm font-bold">Explorar <ArrowRight className="size-4 transition group-hover:translate-x-1" /></span>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="recursos" className="section-space bg-white">
-        <div className="site-wrap grid gap-6 lg:grid-cols-12">
-          <div className="relative min-h-[520px] overflow-hidden rounded-[2rem] lg:col-span-7">
-            <img
-              src="/bible.webp"
-              alt="Biblia abierta iluminada por el sol"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+      <section className="section-space bg-rio-mint/20">
+        <div className="site-wrap grid gap-6 lg:grid-cols-3">
+          <article className="flex flex-col rounded-[2rem] bg-white p-8">
+            <img src="/youversion.png" alt="YouVersion" className="h-28 w-full object-contain object-left" />
+            <p className="eyebrow mt-8 text-rio-coral">Devocionales</p>
+            <h2 className="mt-4 text-3xl font-semibold">La Biblia cada día.</h2>
+            <p className="mt-4 text-sm leading-6 text-slate-600">Lee, escucha y sigue planes bíblicos junto a la comunidad.</p>
+            <a href="https://www.bible.com/es" target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 text-sm font-bold">Abrir YouVersion <ArrowRight className="size-4" /></a>
+          </article>
+          <article className="flex flex-col rounded-[2rem] bg-rio-navy p-8 text-white">
+            <Sparkles className="size-8 text-rio-gold" />
+            <img src="/libro.png" alt="Libro Amor a prueba de todo" className="mx-auto my-8 h-44 object-contain" />
+            <h2 className="text-3xl font-semibold">Amor a prueba de todo.</h2>
+            <a href="https://www.amazon.com.mx/dp/B0G1994SM1" target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-rio-mint">Conocer el libro <ArrowRight className="size-4" /></a>
+          </article>
+          <article className="relative flex min-h-[430px] flex-col justify-end overflow-hidden rounded-[2rem] p-8 text-white">
+            <img src="/rio-kids.png" alt="RÍO Kids" className="absolute inset-0 h-full w-full object-cover" />
             <div className="image-veil absolute inset-0" />
-            <div className="absolute inset-x-0 bottom-0 p-7 text-white sm:p-10">
-              <p className="eyebrow text-rio-gold">La Biblia y Nosotras</p>
-              <h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-[-.04em] sm:text-5xl">
-                Fe que también se conversa.
-              </h2>
+            <div className="relative">
+              <p className="eyebrow text-rio-gold">Domingos en RÍO</p>
+              <h2 className="mt-4 text-4xl font-semibold">RÍO Kids</h2>
+              <p className="mt-3 text-sm text-white/75">Fe, cuidado y diversión para cada etapa.</p>
+              <a href="/ministerios" className="mt-6 inline-flex items-center gap-2 text-sm font-bold">Conocer más <ArrowRight className="size-4" /></a>
             </div>
-          </div>
-          <div className="flex flex-col justify-between rounded-[2rem] bg-rio-coral p-7 text-white sm:p-10 lg:col-span-5">
-            <Sparkles className="size-8" />
-            <div>
-              <p className="mt-16 text-2xl leading-10">
-                “Todo lo que entre al río vivirá.”
-              </p>
-              <p className="mt-3 text-sm text-white/65">Ezequiel 47:9</p>
-            </div>
-            <a
-              href="#dar"
-              className="mt-12 flex items-center justify-between border-t border-white/20 pt-5 font-semibold"
-            >
-              Sostener esta misión <ArrowDownRight />
-            </a>
-          </div>
+          </article>
         </div>
       </section>
 
-      <section id="dar" className="section-space bg-rio-paper">
-        <div className="site-wrap grid overflow-hidden rounded-[2.25rem] bg-rio-navy text-white lg:grid-cols-2">
-          <div className="relative min-h-[380px]">
-            <img
-              src="/family.webp?v=2"
-              alt="Familias y amigos reunidos al atardecer"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="image-veil absolute inset-0" />
-            <div className="absolute inset-x-0 bottom-0 p-8">
-              <p className="eyebrow text-rio-mint">Generosidad</p>
-              <h2 className="mt-4 text-4xl font-semibold tracking-[-.04em]">
-                Damos porque hemos recibido.
-              </h2>
-            </div>
+      <section className="section-space bg-rio-coral text-white">
+        <div className="site-wrap grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="eyebrow text-rio-gold">Mensajes RÍO</p>
+            <h2 className="display-section mt-5 max-w-5xl">UNA PALABRA PARA TU SEMANA.</h2>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">Revive las reuniones, mensajes y conversaciones de la casa desde nuestro canal.</p>
           </div>
-          <DonationForm />
+          <a href="https://www.youtube.com/channel/UCfKO8cXJBjlq806mAnRFlBA" target="_blank" rel="noreferrer" className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-rio-navy"><Play className="size-4" /> Ver mensajes</a>
         </div>
       </section>
 
-      <footer className="bg-rio-navy pb-10 pt-20 text-white">
-        <div className="site-wrap grid gap-12 border-b border-white/12 pb-16 md:grid-cols-[1.3fr_.7fr_.7fr]">
-          <div>
-            <p className="font-display text-5xl tracking-[.06em]">RÍO MX</p>
-            <p className="mt-5 max-w-sm text-sm leading-6 text-white/55">
-              Una iglesia viva en Ciudad de México. Ven como eres y encuentra tu
-              siguiente paso.
-            </p>
-          </div>
-          <div>
-            <p className="eyebrow text-rio-mint">Reuniones</p>
-            <p className="mt-5 text-sm leading-7 text-white/70">
-              Domingos
-              <br />
-              8:30 · 10:30 · 13:00 · 19:00
-              <br />
-              Jueves · 20:00
-            </p>
-          </div>
-          <div>
-            <p className="eyebrow text-rio-mint">Explora</p>
-            <div className="mt-5 grid gap-3 text-sm text-white/70">
-              <a href="#encuentros">Encuentros</a>
-              <a href="#grupos">Grupos nuevos</a>
-              <a href="#dar">Donativos</a>
-              <a href="/panel">Panel interno</a>
-            </div>
-          </div>
-        </div>
-        <div className="site-wrap mt-8 flex flex-col justify-between gap-3 text-[10px] uppercase tracking-[.14em] text-white/35 sm:flex-row">
-          <span>© 2026 RÍO MX</span>
-          <span>Ve y haz discípulos</span>
-        </div>
-      </footer>
-
-      {event && (
-        <CheckoutDialog
-          event={event}
-          kind={checkout}
-          onClose={() => setCheckout(null)}
-        />
-      )}
-      <GroupDialog open={groupOpen} onClose={() => setGroupOpen(false)} />
+      <SiteFooter />
     </main>
   );
 }
